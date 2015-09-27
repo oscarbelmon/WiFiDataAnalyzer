@@ -43,6 +43,13 @@ public class Measures {
             .collect(Collectors.toList()));
     }
 
+    public Measures getMeasuresByRoomAndRelativePosition(Room room, RelativePosition relativePosition) {
+        return new Measures(measures.stream()
+            .filter(m -> m.getRoom() == room)
+            .filter(m -> m.getRelativePosition() == relativePosition)
+            .collect(Collectors.toList()));
+    }
+
     public Measures getMeasuresReadingsGreeterOrEqualTo(int reading) {
         return new Measures(measures.stream()
                 .filter(m -> m.getAnyReadingGreaterOrEqualTo(reading))

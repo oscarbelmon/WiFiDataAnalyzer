@@ -4,6 +4,7 @@ package data;
  * Created by oscar on 27/09/15.
  */
 public class Reading {
+    public static int NO_VISIBLE = 100;
     private int intensity;
     private WAP wap;
 

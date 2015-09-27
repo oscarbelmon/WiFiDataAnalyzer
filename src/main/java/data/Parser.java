@@ -36,6 +36,6 @@ public class Parser {
         Room room = Room.values()[Integer.parseInt(data[numberOfMacs])];
         RelativePosition relativePosition = RelativePosition.values()[Integer.parseInt(data[numberOfMacs+1])];
         Date timeStap = new Date(Integer.parseInt(data[numberOfMacs+2]));
-        return new Measure(readings, room, relativePosition, timeStap);
+        return new Measure(new Readings(readings), room, relativePosition, timeStap);
     }
 }
