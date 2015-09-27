@@ -38,7 +38,7 @@ public class MetaData {
         return numberOfMacs;
     }
 
-    public WAP getWAPByIndex(int index) {
+    WAP getWAPByIndex(int index) {
         return WAPs.get(index);
     }
 
