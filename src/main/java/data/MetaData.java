@@ -26,7 +26,6 @@ public class MetaData {
         Gson gson = new Gson();
 
         try {
-//            String content = new String(Files.readAllBytes(Paths.get("src/main/resources/sensorstrainingData_belmonte.txt")));
             String content = new String(Files.readAllBytes(Paths.get(fileName)));
             metaData = gson.fromJson(new FileReader(fileName), MetaData.class);
         } catch (IOException e) {
@@ -37,6 +36,10 @@ public class MetaData {
 
     public int getNumberOfMacs() {
         return numberOfMacs;
+    }
+
+    public WAP getWAPByIndex(int index) {
+        return WAPs.get(index);
     }
 
     @Override

@@ -9,7 +9,7 @@ public class WAP {
 
     @Override
     public String toString() {
-        return "WAP{" +
+        return "{" +
                 "name='" + name + '\'' +
                 ", macAddress='" + macAddress + '\'' +
                 '}';

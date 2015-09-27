@@ -51,7 +51,7 @@ public class Measures {
 
     @Override
     public String toString() {
-        return "Measures{" +
+        return "{" +
                 "measures=" + measures +
                 '}';
     }

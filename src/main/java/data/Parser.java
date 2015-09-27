@@ -8,11 +8,13 @@ import java.util.List;
  * Created by oscar on 26/09/15.
  */
 public class Parser {
+    private MetaData metaData;
     private int numberOfMacs;
 
     public Parser(MetaData metaData) {
         super();
         numberOfMacs = metaData.getNumberOfMacs();
+        this.metaData = metaData;
     }
 
     public List<Measure> parse(String data) {
@@ -27,9 +29,9 @@ public class Parser {
 
     private Measure parseLine(String measure) {
         String data[] = measure.split(" ");
-        int[] readings = new int[numberOfMacs];
+        List<Reading> readings = new ArrayList<>();
         for(int i = 0; i < numberOfMacs; i++) {
-            readings[i] = Integer.parseInt(data[i]);
+            readings.add(new Reading(Integer.parseInt(data[i]), metaData.getWAPByIndex(i)));
         }
         Room room = Room.values()[Integer.parseInt(data[numberOfMacs])];
         RelativePosition relativePosition = RelativePosition.values()[Integer.parseInt(data[numberOfMacs+1])];

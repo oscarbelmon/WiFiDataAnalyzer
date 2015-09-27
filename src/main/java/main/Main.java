@@ -15,6 +15,6 @@ public class Main {
         Measures measures = Measures.fromFile("src/main/resources/sensorstrainingData_belmonte.txt", metaData);
         Measures filtered = measures.getMeasuresReadingsGreeterOrEqualTo(-20);
         System.out.println(filtered.getNumberMeasures());
-
+        System.out.println(filtered);
     }
 }
