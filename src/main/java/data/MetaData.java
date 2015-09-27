@@ -21,19 +21,6 @@ public class MetaData {
     private Range rangeValidation;
     private List<WAP> WAPs;
 
-    public static MetaData fromFile(String fileName) {
-        MetaData metaData = new MetaData();
-        Gson gson = new Gson();
-
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(fileName)));
-            metaData = gson.fromJson(new FileReader(fileName), MetaData.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return metaData;
-    }
-
     public int getNumberOfMacs() {
         return numberOfMacs;
     }
