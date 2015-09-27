@@ -13,8 +13,9 @@ public class Main {
     private void ejecuta() {
         MetaData metaData = MetaData.fromFile("src/main/resources/meta_data.json");
         Measures measures = Measures.fromFile("src/main/resources/sensorstrainingData_belmonte.txt", metaData);
-        Measures filtered = measures.getMeasuresReadingsGreeterOrEqualTo(-20);
-        System.out.println(filtered.getNumberMeasures());
-        System.out.println(filtered);
+//        Measures filtered = measures.getMeasuresReadingsGreeterOrEqualTo(-20);
+//        System.out.println(filtered.getNumberMeasures());
+//        System.out.println(measures.getMeasureByIndex(1000).getVisibleReadings().size());
+        System.out.println(measures.getMeasuresByRoom(Room.BEDROOM1).getMeanNumberVisibleWAPs());
     }
 }

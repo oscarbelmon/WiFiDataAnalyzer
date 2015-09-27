@@ -14,9 +14,12 @@ public class MeasuresTest {
     @Test
     public void testGetNumberMeasures() throws Exception {
         String fileName = "src/test/resources/sensorstrainingData_belmonte.txt";
-        MetaData mockMetaData = mock(MetaData.class);
-        when(mockMetaData.getNumberOfMacs()).thenReturn(127);
-        Measures measures = Measures.fromFile(fileName, mockMetaData);
+        WAP wapMock = mock(WAP.class);
+        MetaData metaDataMock = mock(MetaData.class);
+        when(metaDataMock.getNumberOfMacs()).thenReturn(127);
+//        when(metaDataMock.getWAPByIndex(anyInt())).thenReturn(wapMock);
+        when(metaDataMock.getWAPByIndex(anyInt())).thenReturn(null);
+        Measures measures = Measures.fromFile(fileName, metaDataMock);
         assertThat(measures.getNumberMeasures(), is(9414));
     }
 

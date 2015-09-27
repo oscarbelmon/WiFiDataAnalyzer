@@ -49,6 +49,18 @@ public class Measures {
                 .collect(Collectors.toList()));
     }
 
+    public Measure getMeasureByIndex(int index) {
+        // TODO Check index validity.
+        return measures.get(index);
+    }
+
+    public double getMeanNumberVisibleWAPs() {
+        return measures.stream()
+                .mapToLong(Measure::getNumberVisibleReadings)
+                .average()
+                .getAsDouble();
+    }
+
     @Override
     public String toString() {
         return "{" +

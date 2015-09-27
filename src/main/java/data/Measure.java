@@ -3,6 +3,7 @@ package data;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by oscar on 26/09/15.
@@ -30,6 +31,16 @@ public class Measure {
                 .stream()
                 .filter(r -> r.getIntensity() >= reading && r.getIntensity() < NO_MEASURE)
                 .count() > 0;
+    }
+
+    public List<Reading> getVisibleReadings() {
+        return readings.stream()
+                .filter(r -> r.getIntensity() != NO_MEASURE)
+                .collect(Collectors.toList());
+    }
+
+    public long getNumberVisibleReadings() {
+        return getVisibleReadings().size();
     }
 
     @Override
