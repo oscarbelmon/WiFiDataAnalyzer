@@ -8,7 +8,6 @@ import java.util.List;
  * Created by oscar on 26/09/15.
  */
 public class Parser {
-//    private MetaData metaData;
     private int numberOfMacs;
 
     public Parser(MetaData metaData) {

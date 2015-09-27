@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -38,9 +37,22 @@ public class Measures {
         return measures.size();
     }
 
-    public List<Measure> getMeasuresByRoom(Room room) {
-        return measures.stream()
+    public Measures getMeasuresByRoom(Room room) {
+        return new Measures(measures.stream()
             .filter(m -> m.getRoom() == room)
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()));
+    }
+
+    public Measures getMeasuresReadingsGreeterOrEqualTo(int reading) {
+        return new Measures(measures.stream()
+                .filter(m -> m.getAnyReadingGreaterOrEqualTo(reading))
+                .collect(Collectors.toList()));
+    }
+
+    @Override
+    public String toString() {
+        return "Measures{" +
+                "measures=" + measures +
+                '}';
     }
 }

@@ -20,8 +20,12 @@ public class MeasuresTest {
         assertThat(measures.getNumberMeasures(), is(9414));
     }
 
-//    @Test
+    @Test
     public void testGetMeasuresByRoom() throws Exception {
-        fail("Not implemented yet");
+        String fileName = "src/test/resources/sensorstrainingData_belmonte.txt";
+        MetaData mockMetaData = mock(MetaData.class);
+        when(mockMetaData.getNumberOfMacs()).thenReturn(127);
+        Measures measures = Measures.fromFile(fileName, mockMetaData);
+        assertThat(measures.getMeasuresByRoom(Room.BALCONY).getNumberMeasures(), is(530));
     }
 }

@@ -7,6 +7,7 @@ import java.util.Date;
  * Created by oscar on 26/09/15.
  */
 public class Measure {
+    public static int NO_MEASURE = 100;
     private int[] readings;
     private Room room;
     private RelativePosition relativePosition;
@@ -21,6 +22,12 @@ public class Measure {
 
     public Room getRoom() {
         return room;
+    }
+
+    public boolean getAnyReadingGreaterOrEqualTo(int reading) {
+        return Arrays.stream(readings)
+                .filter(r -> r >= reading && r < NO_MEASURE)
+                .count() > 0;
     }
 
     @Override
