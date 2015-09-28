@@ -40,12 +40,12 @@ public class MeasuresReader {
         int numberOfMacs = metaData.getNumberOfMacs();
         String data[] = measure.split(" ");
         List<Reading> readings = new ArrayList<>();
-        for(int i = 0; i < numberOfMacs; i++) {
-            readings.add(new Reading(Integer.parseInt(data[i]), metaData.getWAPByIndex(i)));
-        }
         Room room = Room.values()[Integer.parseInt(data[numberOfMacs])];
         RelativePosition relativePosition = RelativePosition.values()[Integer.parseInt(data[numberOfMacs+1])];
         Date timeStap = new Date(Integer.parseInt(data[numberOfMacs+2]));
+        for(int i = 0; i < numberOfMacs; i++) {
+            readings.add(new Reading(Integer.parseInt(data[i]), metaData.getWAPByIndex(i), room, relativePosition, timeStap));
+        }
         return new Measure(new Readings(readings), room, relativePosition, timeStap);
     }
 }

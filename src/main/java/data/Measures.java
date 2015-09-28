@@ -1,11 +1,5 @@
 package data;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +28,20 @@ public class Measures {
             .filter(m -> m.getRoom() == room)
             .filter(m -> m.getRelativePosition() == relativePosition)
             .collect(Collectors.toList()));
+    }
+
+    public Readings getVisibleMeasures() {
+        return new Readings(measures.stream()
+                .map(m -> m.getVisibleReadings().getReadings())
+                .flatMap(r -> r.stream())
+                .filter(r -> r.getIntensity() != Reading.NO_VISIBLE)
+                .collect(Collectors.toList()));
+    }
+
+    public long getNumberVisibleReadings() {
+        return measures.stream()
+                .mapToInt(m -> m.getVisibleReadings().getReadings().size())
+                .sum();
     }
 
     public Measures getMeasuresReadingsGreeterOrEqualTo(int reading) {

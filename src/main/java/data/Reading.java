@@ -1,5 +1,7 @@
 package data;
 
+import java.util.Date;
+
 /**
  * Created by oscar on 27/09/15.
  */
@@ -7,10 +9,16 @@ public class Reading {
     public static int NO_VISIBLE = 100;
     private int intensity;
     private WAP wap;
+    private Room room;
+    private RelativePosition relativePosition;
+    private Date date;
 
-    public Reading(int intensity, WAP wap) {
+    public Reading(int intensity, WAP wap, Room room, RelativePosition relativePosition, Date date) {
         this.intensity = intensity;
         this.wap = wap;
+        this.room = room;
+        this.relativePosition = relativePosition;
+        this.date = date;
     }
 
     public int getIntensity() {
@@ -21,11 +29,26 @@ public class Reading {
         return wap;
     }
 
+    public Room getRoom() {
+        return room;
+    }
+
+    public RelativePosition getRelativePosition() {
+        return relativePosition;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
     @Override
     public String toString() {
-        return "{" +
+        return "Reading{" +
                 "intensity=" + intensity +
-                ", wap='" + wap + '\'' +
+                ", wap=" + wap +
+                ", room=" + room +
+                ", relativePosition=" + relativePosition +
+                ", date=" + date +
                 '}';
     }
 }

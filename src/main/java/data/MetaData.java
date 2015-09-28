@@ -1,11 +1,5 @@
 package data;
 
-import com.google.gson.Gson;
-
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -25,7 +19,7 @@ public class MetaData {
         return numberOfMacs;
     }
 
-    WAP getWAPByIndex(int index) {
+    public WAP getWAPByIndex(int index) {
         return WAPs.get(index);
     }
 
