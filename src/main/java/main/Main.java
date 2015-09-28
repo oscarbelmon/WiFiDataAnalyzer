@@ -1,13 +1,30 @@
 package main;
 
 import data.*;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * Created by oscar on 26/09/15.
  */
-public class Main {
+public class Main extends Application {
+    private static String dataFileName = "src/main/resources/sensorstrainingData_belmonte.txt";
+    private static String metaDataFileName = "src/main/resources/meta_data.json";
+    private static MetaData metaData;
+    private static Measures measures;
+
     public static void main(String[] args) {
-        new Main().ejecuta();
+//        new Main().ejecuta();
+        loadData();
+        launch(args);
+    }
+
+    private static void loadData() {
+        metaData = MetaDataReader.fromFile(metaDataFileName);
+        measures = MeasuresReader.fromFile(dataFileName, metaData);
     }
 
     private void ejecuta() {
@@ -46,5 +63,16 @@ public class Main {
         System.out.println(greaterThan.getNumberOfReadings());
         greaterThan = bedroom1Visible.getReadingsGreeterOrEqualTo(-10);
         System.out.println(greaterThan.getNumberOfReadings());
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader();
+        Parent root = loader.load(getClass().getResource("../gui/sample.fxml").openStream());
+        Controller controller = loader.getController();
+        controller.setReadings(measures.getVisibleReadings().getVisibleReadingByRoom(Room.BEDROOM1));
+        primaryStage.setTitle("WiFi Fingerprints");
+        primaryStage.setScene(new Scene(root, 800, 275));
+        primaryStage.show();
     }
 }
