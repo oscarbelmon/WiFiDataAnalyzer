@@ -26,7 +26,7 @@ public class MeasuresReader {
         return new Measures(measures);
     }
 
-    public static List<Measure> parse(String data, MetaData metaData) {
+    private static List<Measure> parse(String data, MetaData metaData) {
         List<Measure> measures = new ArrayList<>();
 
         String[] stringMeasures = data.split("\n");
