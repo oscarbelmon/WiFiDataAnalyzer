@@ -30,7 +30,7 @@ public class Measures {
             .collect(Collectors.toList()));
     }
 
-    public Readings getVisibleMeasures() {
+    public Readings getVisibleReadings() {
         return new Readings(measures.stream()
                 .map(m -> m.getVisibleReadings().getReadings())
                 .flatMap(r -> r.stream())

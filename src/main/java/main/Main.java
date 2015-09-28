@@ -28,12 +28,23 @@ public class Main {
 //        System.out.println(measures.getMeasuresByRoomAndRelativePosition(Room.BEDROOM3, RelativePosition.DOOR).getMeanNumberVisibleWAPs());
 //        System.out.println(measures.getNumberMeasures());
 //        System.out.println(measures.getNumberVisibleReadings());
-//        System.out.println(measures.getVisibleMeasures().getNumberOfReadings());
+//        System.out.println(measures.getVisibleReadings().getNumberOfReadings());
 //        WapReadings wapReadings = new WapReadings(measures);
 //        System.out.println(wapReadings.getVisibleReadingByRoom(Room.BEDROOM1).getNumberOfReadings());
 //        System.out.println(wapReadings.getVisibleReadingsByWAP(metaData.getWAPByIndex(2)).getNumberOfReadings());
 
-        Readings allVisible = measures.getVisibleMeasures();
-        System.out.println(allVisible.getVisibleReadingByRoom(Room.BEDROOM1).getNumberOfReadings());
+        Readings allVisible = measures.getVisibleReadings();
+        Readings bedroom1Visible = allVisible.getVisibleReadingByRoom(Room.BEDROOM1);
+        System.out.println(bedroom1Visible.getNumberOfReadings());
+        Readings greaterThan = bedroom1Visible.getReadingsGreeterOrEqualTo(-100);
+        System.out.println(greaterThan.getNumberOfReadings());
+        greaterThan = bedroom1Visible.getReadingsGreeterOrEqualTo(-90);
+        System.out.println(greaterThan.getNumberOfReadings());
+        greaterThan = bedroom1Visible.getReadingsGreeterOrEqualTo(-50);
+        System.out.println(greaterThan.getNumberOfReadings());
+        greaterThan = bedroom1Visible.getReadingsGreeterOrEqualTo(-30);
+        System.out.println(greaterThan.getNumberOfReadings());
+        greaterThan = bedroom1Visible.getReadingsGreeterOrEqualTo(-10);
+        System.out.println(greaterThan.getNumberOfReadings());
     }
 }

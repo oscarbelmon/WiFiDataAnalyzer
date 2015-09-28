@@ -65,4 +65,11 @@ public class Readings {
                 .collect(Collectors.toList()));
         wapReadings.put(wap, readings);
     }
+
+    public Readings getReadingsGreeterOrEqualTo(int intensity) {
+        return new Readings(getVisibleReadings().getReadings().stream()
+                .filter(m -> m.getIntensity() > intensity)
+                .collect(Collectors.toList()));
+    }
+
 }

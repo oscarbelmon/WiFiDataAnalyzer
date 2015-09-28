@@ -14,7 +14,7 @@ public class WapReadings {
 
     public WapReadings(Measures measures) {
         this.measures = measures;
-        visibleReadings = measures.getVisibleMeasures();
+        visibleReadings = measures.getVisibleReadings();
     }
 
     public Readings getVisibleReadingByRoom(Room room) {
