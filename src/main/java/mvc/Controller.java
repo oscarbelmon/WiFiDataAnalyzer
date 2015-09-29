@@ -1,6 +1,7 @@
 package mvc;
 
 import data.MetaData;
+import data.Reading;
 import data.Readings;
 import data.Room;
 import javafx.beans.value.ChangeListener;
@@ -18,7 +19,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 
 import java.net.URL;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 public class Controller implements Initializable, ChangeListener<Number> {
     @FXML
@@ -33,6 +36,7 @@ public class Controller implements Initializable, ChangeListener<Number> {
     private CategoryAxis waps;
     private Readings readings;
     private MetaData metaData;
+    private Set<Room> roomSet = new HashSet<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -49,8 +53,17 @@ public class Controller implements Initializable, ChangeListener<Number> {
     }
 
     private void updateChart(Room room) {
-        Readings readingsRoom = readings.getVisibleReadingByRoom(room);
+        if(roomSet.contains(room) == false) {
+            Readings readingsRoom = readings.getVisibleReadingByRoom(room);
+            if(roomSet.isEmpty()) setSeries(readingsRoom, room.toString());
+            else addSeries(readingsRoom, room.toString());
+            roomSet.add(room);
+        }
+    }
+
+    private XYChart.Series<String, Number> newSeries(Readings readingsRoom, String label) {
         XYChart.Series<String, Number> serie = new XYChart.Series<>();
+        serie.setName(label);
         String categoryName;
         Number categoryData;
         for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
@@ -58,8 +71,15 @@ public class Controller implements Initializable, ChangeListener<Number> {
             categoryName = metaData.getWAPByIndex(i).getName();
             serie.getData().add(new XYChart.Data<>(categoryName, categoryData));
         }
-        readingsChart.getData().setAll(serie);
-//        readingsChart.getData().add(serie);
+        return serie;
+    }
+
+    private void addSeries(Readings readings, String label) {
+        readingsChart.getData().addAll(newSeries(readings, label));
+    }
+
+    private void setSeries(Readings readings, String label) {
+        readingsChart.getData().setAll(newSeries(readings, label));
     }
 
 
@@ -71,15 +91,7 @@ public class Controller implements Initializable, ChangeListener<Number> {
         ObservableList<String> wapNames = FXCollections.observableArrayList(wapsArray);
         waps.setCategories(wapNames);
         waps.setTickLabelRotation(90);
-        XYChart.Series<String, Number> serie = new XYChart.Series<>();
-        String categoryName;
-        Number categoryData;
-        for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
-            categoryData = readings.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
-            categoryName = metaData.getWAPByIndex(i).getName();
-            serie.getData().add(new XYChart.Data<>(categoryName, categoryData));
-        }
-        readingsChart.getData().add(serie);
+        setSeries(readings, "ALL");
     }
 
     private void populateRoomCombo() {
