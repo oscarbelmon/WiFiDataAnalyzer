@@ -13,5 +13,5 @@ public enum Room {
     CORRIDOR,
     DRAWINGROOM,
     WC1,
-    WCD2;
+    WC2;
 }

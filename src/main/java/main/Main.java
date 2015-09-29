@@ -18,9 +18,11 @@ public class Main extends Application {
     private static Measures measures;
 
     public static void main(String[] args) {
+//        System.out.println("Uno");
         loadData();
-//        launch(args);
-        ejecuta();
+//        System.out.println("Dos");
+        launch(args);
+//        ejecuta();
     }
 
     private static void loadData() {
@@ -54,26 +56,22 @@ public class Main extends Application {
         Readings allVisible = measures.getVisibleReadings();
         Readings bedroom1Visible = allVisible.getVisibleReadingByRoom(Room.BEDROOM1);
         System.out.println(bedroom1Visible.getNumberOfReadings());
-        Readings greaterThan = bedroom1Visible.getReadingsGreeterOrEqualTo(-100);
-        System.out.println(greaterThan.getNumberOfReadings());
-        greaterThan = bedroom1Visible.getReadingsGreeterOrEqualTo(-90);
-        System.out.println(greaterThan.getNumberOfReadings());
-        greaterThan = bedroom1Visible.getReadingsGreeterOrEqualTo(-50);
-        System.out.println(greaterThan.getNumberOfReadings());
-        greaterThan = bedroom1Visible.getReadingsGreeterOrEqualTo(-30);
-        System.out.println(greaterThan.getNumberOfReadings());
-        greaterThan = bedroom1Visible.getReadingsGreeterOrEqualTo(-10);
-        System.out.println(greaterThan.getNumberOfReadings());
+        for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
+            Readings bedroom1WAPVisible = bedroom1Visible.getVisibleReadingsByWAP(metaData.getWAPByIndex(i));
+            System.out.println(i + " --> " + bedroom1WAPVisible.getNumberOfReadings());
+        }
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+//        System.out.println("Tres");
         FXMLLoader loader = new FXMLLoader();
         Parent root = loader.load(getClass().getResource("../gui/sample.fxml").openStream());
         Controller controller = loader.getController();
-        controller.setReadings(measures.getVisibleReadings().getVisibleReadingByRoom(Room.BEDROOM1));
         primaryStage.setTitle("WiFi Fingerprints");
         primaryStage.setScene(new Scene(root, 800, 275));
+        controller.setReadings(measures.getVisibleReadings());
+        controller.setMetaData(metaData);
         primaryStage.show();
     }
 }

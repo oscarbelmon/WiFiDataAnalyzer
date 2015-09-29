@@ -7,6 +7,14 @@ public class WAP {
     private String name;
     private String macAddress;
 
+    public String getName() {
+        return name;
+    }
+
+    public String getMacAddress() {
+        return macAddress;
+    }
+
     @Override
     public String toString() {
         return "{" +
