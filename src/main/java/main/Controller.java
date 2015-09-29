@@ -1,11 +1,8 @@
 package main;
 
 import data.Readings;
-import data.Room;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
@@ -34,7 +31,7 @@ public class Controller implements Initializable, ChangeListener<Number> {
     }
 
     private void populateRoomCombo() {
-//        roomCombo.getItems().addAll(Room.values());
+//            numberWAPs.setText(readings.getReadingsGreeterOrEqualTo(c.intValue()).getNumberOfReadings() + "");
     }
 
     private void escuchador(Number a, Number b, Number c) {

@@ -17,7 +17,10 @@
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="numberWAPs" text="Label" />
+<<<<<<< HEAD
             <ComboBox fx:id="roomCombo" prefWidth="150.0" promptText="Room" />
+=======
+>>>>>>> 20678532519b45e894c99e610a05d55f707056b4
          </children>
       </HBox>
    </top>
