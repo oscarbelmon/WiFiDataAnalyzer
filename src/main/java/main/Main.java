@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import mvc.Controller;
 
 /**
  * Created by oscar on 26/09/15.
@@ -17,9 +18,9 @@ public class Main extends Application {
     private static Measures measures;
 
     public static void main(String[] args) {
-//        new Main().ejecuta();
         loadData();
-        launch(args);
+//        launch(args);
+        ejecuta();
     }
 
     private static void loadData() {
@@ -27,7 +28,7 @@ public class Main extends Application {
         measures = MeasuresReader.fromFile(dataFileName, metaData);
     }
 
-    private void ejecuta() {
+    private static void ejecuta() {
         MetaData metaData = MetaDataReader.fromFile("src/main/resources/meta_data.json");
         Measures measures = MeasuresReader.fromFile("src/main/resources/sensorstrainingData_belmonte.txt", metaData);
 //        Measures filtered = measures.getMeasuresReadingsGreeterOrEqualTo(-20);

@@ -1,4 +1,4 @@
-package main;
+package mvc;
 
 import data.Readings;
 import javafx.beans.value.ChangeListener;
