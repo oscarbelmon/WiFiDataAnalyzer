@@ -12,27 +12,25 @@ import mvc.Controller;
  * Created by oscar on 26/09/15.
  */
 public class Main extends Application {
-    private static String dataFileName = "src/main/resources/sensorstrainingData_belmonte.txt";
-    private static String metaDataFileName = "src/main/resources/meta_data.json";
     private static MetaData metaData;
     private static Measures measures;
 
     public static void main(String[] args) {
-//        System.out.println("Uno");
-        loadData();
-//        System.out.println("Dos");
+        loadData(args[0]);
         launch(args);
-//        ejecuta();
+//        ejecuta(args[0]);
     }
 
-    private static void loadData() {
+    private static void loadData(final String metaDataFileName) {
         metaData = MetaDataReader.fromFile(metaDataFileName);
-        measures = MeasuresReader.fromFile(dataFileName, metaData);
+        measures = MeasuresReader.fromFile(metaData);
     }
 
-    private static void ejecuta() {
-        MetaData metaData = MetaDataReader.fromFile("src/main/resources/meta_data.json");
-        Measures measures = MeasuresReader.fromFile("src/main/resources/sensorstrainingData_belmonte.txt", metaData);
+    private static void ejecuta(final String metaDataFileName) {
+        metaData = MetaDataReader.fromFile(metaDataFileName);
+        measures = MeasuresReader.fromFile(metaData);
+//        MetaData metaData = MetaDataReader.fromFile("src/main/resources/meta_data.json");
+//        Measures measures = MeasuresReader.fromFile("src/main/resources/sensorstrainingData_belmonte.txt", metaData);
 //        Measures filtered = measures.getMeasuresReadingsGreeterOrEqualTo(-20);
 //        System.out.println(filtered.getNumberMeasures());
 //        System.out.println(measures.getMeasureByIndex(1000).getVisibleReadings().size());

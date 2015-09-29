@@ -12,7 +12,8 @@ import java.util.List;
  * Created by oscar on 27/09/15.
  */
 public class MeasuresReader {
-    public static Measures fromFile(String fileName, MetaData metaData) {
+    public static Measures fromFile(MetaData metaData) {
+        final String fileName = metaData.getTrainingDataFile();
         List<Measure> measures = new ArrayList<>();
         try {
             String content = new String(Files.readAllBytes(Paths.get(fileName)));

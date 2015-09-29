@@ -6,6 +6,8 @@ import java.util.List;
  * Created by oscar on 26/09/15.
  */
 public class MetaData {
+    private String trainingDataFile;
+    private String validationDataFile;
     private int trainingSamples;
     private int validationSamples;
     private int numberOfMacs;
@@ -19,6 +21,14 @@ public class MetaData {
         return numberOfMacs;
     }
 
+    public String getTrainingDataFile() {
+        return trainingDataFile;
+    }
+
+    public String getValidationDataFile() {
+        return validationDataFile;
+    }
+
     public WAP getWAPByIndex(int index) {
         return WAPs.get(index);
     }
@@ -26,7 +36,9 @@ public class MetaData {
     @Override
     public String toString() {
         return "MetaData{" +
-                "trainingSamples=" + trainingSamples +
+                "trainingDataFile='" + trainingDataFile + '\'' +
+                ", validationDataFile='" + validationDataFile + '\'' +
+                ", trainingSamples=" + trainingSamples +
                 ", validationSamples=" + validationSamples +
                 ", numberOfMacs=" + numberOfMacs +
                 ", numberOfMacsTraining=" + numberOfMacsTraining +

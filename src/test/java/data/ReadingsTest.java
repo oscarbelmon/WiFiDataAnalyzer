@@ -11,8 +11,7 @@ import static org.junit.Assert.*;
 import static org.hamcrest.core.Is.*;
 
 public class ReadingsTest {
-    private static String metaDataFile = "src/test/resources/meta_data.json";
-    private static String dataFile = "src/test/resources/sensorstrainingData_belmonte.txt";
+    private static String metaDataFile = "src/main/resources/meta_data.json";
     private static MetaData metaData;
     private static Measures measures;
     private static long totalNumberReadings = 132035L;
@@ -21,7 +20,7 @@ public class ReadingsTest {
     @BeforeClass
     public static void init() {
         metaData = MetaDataReader.fromFile(metaDataFile);
-        measures = MeasuresReader.fromFile(dataFile, metaData);
+        measures = MeasuresReader.fromFile(metaData);
         readings = measures.getVisibleReadings();
     }
 
