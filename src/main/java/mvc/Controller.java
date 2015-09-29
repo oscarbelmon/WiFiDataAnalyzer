@@ -8,6 +8,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
@@ -16,6 +17,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 
 import java.net.URL;
@@ -37,6 +39,28 @@ public class Controller implements Initializable, ChangeListener<Number> {
     private Readings readings;
     private MetaData metaData;
     private Set<Room> roomSet = new HashSet<>();
+
+    @FXML
+    private RadioButton kitchen;
+    @FXML
+    private RadioButton diningroom;
+    @FXML
+    private RadioButton balcony;
+    @FXML
+    private RadioButton bedroom1;
+    @FXML
+    private RadioButton bedroom2;
+    @FXML
+    private RadioButton bedroom3;
+    @FXML
+    private RadioButton corridor;
+    @FXML
+    private RadioButton drawingroom;
+    @FXML
+    private RadioButton wc1;
+    @FXML
+    private RadioButton wc2;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -61,6 +85,13 @@ public class Controller implements Initializable, ChangeListener<Number> {
         }
     }
 
+    @FXML
+    private void handleButtonAction(ActionEvent event) {
+        String room = ((RadioButton) event.getSource()).getId().toUpperCase();
+        System.out.println(room);
+        updateChart(Room.valueOf(room));
+    }
+
     private XYChart.Series<String, Number> newSeries(Readings readingsRoom, String label) {
         XYChart.Series<String, Number> serie = new XYChart.Series<>();
         serie.setName(label);
@@ -81,7 +112,6 @@ public class Controller implements Initializable, ChangeListener<Number> {
     private void setSeries(Readings readings, String label) {
         readingsChart.getData().setAll(newSeries(readings, label));
     }
-
 
     private void populateChart() {
         String[] wapsArray = new String[metaData.getNumberOfMacs()];
