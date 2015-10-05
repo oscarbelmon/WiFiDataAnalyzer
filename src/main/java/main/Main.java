@@ -67,9 +67,10 @@ public class Main extends Application {
         Parent root = loader.load(getClass().getResource("../gui/sample.fxml").openStream());
         Controller controller = loader.getController();
         primaryStage.setTitle("WiFi Fingerprints");
-        primaryStage.setScene(new Scene(root, 800, 275));
+        primaryStage.setScene(new Scene(root, 1000, 500));
         controller.setReadings(measures.getVisibleReadings());
         controller.setMetaData(metaData);
+        controller.setMeasures(measures);
         primaryStage.show();
     }
 }

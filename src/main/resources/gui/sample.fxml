@@ -14,7 +14,6 @@
    <top>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="numberWAPs" text="Label" />
             <HBox prefHeight="65.0" prefWidth="419.0" spacing="10.0">
                <children>
                   <VBox>
@@ -47,7 +46,7 @@
       </HBox>
    </top>
    <bottom>
-      <Slider fx:id="mySlider" blockIncrement="1.0" majorTickUnit="10.0" max="0.0" min="-100.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="-50.0" BorderPane.alignment="CENTER" />
+      <Slider fx:id="mySlider" blockIncrement="1.0" majorTickUnit="10.0" max="0.0" min="-150.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="-150.0" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
       <BarChart fx:id="readingsChart" animated="false" title="Readings" BorderPane.alignment="CENTER">

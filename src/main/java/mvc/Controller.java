@@ -1,10 +1,6 @@
 package mvc;
 
-import data.MetaData;
-import data.Readings;
-import data.Room;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import data.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable, ChangeListener<Number> {
+public class Controller implements Initializable {
     @FXML
     private Slider mySlider;
     @FXML
@@ -56,13 +52,38 @@ public class Controller implements Initializable, ChangeListener<Number> {
     private RadioButton wc2;
 
     private Map<String, XYChart.Series> seriesMap = new HashMap<>();
+    private Measures measures;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         mySlider.valueProperty().addListener((a, b, c) -> {
-            numberWAPs.setText(readings.getReadingsGreeterOrEqualTo(c.intValue()).getNumberOfReadings() + "");
+//            numberWAPs.setText(readings.getReadingsGreeterOrEqualTo(c.intValue()).getNumberOfReadings() + "");
+            updateChartWithIntensity(c.intValue());
         });
+    }
+
+    private void updateChartWithIntensity(int intensity) {
+        Readings readingsTotal;
+        Readings readingsIntensity;
+        Readings readingsIntensityWAP;
+        Room room;
+        for(String roomString: seriesMap.keySet()) {
+            room = Room.valueOf(roomString);
+            readingsTotal = measures.getVisibleReadings().getVisibleReadingByRoom(room);
+            readingsIntensity = readingsTotal.getReadingsGreeterOrEqualTo(intensity);
+            XYChart.Series series = seriesMap.get(room.toString());
+            float intensityTotal;
+            float intensityLevel;
+            int result;
+            for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
+                intensityTotal = readingsTotal.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
+                intensityLevel = readingsIntensity.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
+                result = (int)(intensityLevel/intensityTotal*100);
+                XYChart.Data<String, Number> data = (XYChart.Data<String, Number>)series.getData().get(i);
+                data.setYValue(result);
+            }
+        }
     }
 
     private void updateChart(Room room) {
@@ -89,7 +110,7 @@ public class Controller implements Initializable, ChangeListener<Number> {
         seriesMap.remove(room.toString());
     }
 
-    private XYChart.Series<String, Number> newSeries(Readings readingsRoom, String label) {
+    private XYChart.Series<String, Number> seriesMaxIntensity(Readings readingsRoom, String label) {
         XYChart.Series<String, Number> serie = new XYChart.Series<>();
         serie.setName(label);
         String categoryName;
@@ -103,14 +124,47 @@ public class Controller implements Initializable, ChangeListener<Number> {
         return serie;
     }
 
+    private XYChart.Series<String, Number> seriesMaxIntensity2(Readings readingsRoom, String label) {
+        XYChart.Series<String, Number> serie = new XYChart.Series<>();
+        serie.setName(label);
+        String categoryName;
+        Number categoryData;
+        Number totalData;
+        int level = (int)mySlider.getValue();
+        int percentage;
+        for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
+            totalData = readingsRoom.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
+            categoryData = readingsRoom.getReadingsGreeterOrEqualTo(level).getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
+//            categoryData = readingsRoom.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
+            percentage = (int)(categoryData.floatValue()/totalData.floatValue()*100);
+            categoryName = metaData.getWAPByIndex(i).getName();
+//            serie.getData().add(new XYChart.Data<>(categoryName, categoryData));
+            serie.getData().add(new XYChart.Data<>(categoryName, percentage));
+        }
+        seriesMap.put(label, serie);
+        return serie;
+    }
+
+    private XYChart.Series<String, Number> seriesWithIntensity(Readings readingsRoom, String label, int intensity) {
+        XYChart.Series<String, Number> serie = new XYChart.Series<>();
+        String categoryName;
+        Number categoryData;
+        for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
+            categoryData = readingsRoom.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
+            categoryName = metaData.getWAPByIndex(i).getName();
+            serie.getData().add(new XYChart.Data<>(categoryName, categoryData));
+        }
+        return serie;
+    }
+
     private void addSeries(Readings readings, String label) {
-        XYChart.Series series = newSeries(readings, label);
+        XYChart.Series series = seriesMaxIntensity2(readings, label);
         readingsChart.getData().addAll(series);
         seriesMap.put(label, series);
     }
 
     private void setSeries(Readings readings, String label) {
-        XYChart.Series series = newSeries(readings, label);
+        XYChart.Series series = seriesMaxIntensity2(readings, label);
         readingsChart.getData().setAll(series);
         seriesMap.remove("ALL");
         seriesMap.put(label, series);
@@ -127,20 +181,6 @@ public class Controller implements Initializable, ChangeListener<Number> {
         setSeries(readings, "ALL");
     }
 
-    private void escuchador(Number a, Number b, Number c) {
-        System.out.println(c);
-    }
-
-    @FXML
-    public void holaPulsado() {
-        System.out.println("Pulsado");
-    }
-
-    @Override
-    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-
-    }
-
     public void setReadings(Readings readings) {
         this.readings = readings;
     }
@@ -148,5 +188,9 @@ public class Controller implements Initializable, ChangeListener<Number> {
     public void setMetaData(MetaData metaData) {
         this.metaData = metaData;
         populateChart();
+    }
+
+    public void setMeasures(Measures measures) {
+        this.measures = measures;
     }
 }
