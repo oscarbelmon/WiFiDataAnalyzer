@@ -45,6 +45,7 @@
          </children>
       </HBox>
    </top>
+
    <bottom>
       <Slider fx:id="mySlider" blockIncrement="1.0" majorTickUnit="10.0" max="0.0" min="-150.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="-150.0" BorderPane.alignment="CENTER" />
    </bottom>

@@ -5,6 +5,10 @@ import java.util.List;
 /**
  * Created by oscar on 26/09/15.
  */
+
+/**
+ * meta_data.json -> Programa
+ */
 public class MetaData {
     private String trainingDataFile;
     private String validationDataFile;

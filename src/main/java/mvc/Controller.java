@@ -13,16 +13,19 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
+
     @FXML
     private Slider mySlider;
     @FXML
     private Label numberWAPs;
+
     @FXML
     private BarChart<String, Number> readingsChart;
     @FXML
@@ -51,27 +54,41 @@ public class Controller implements Initializable {
     @FXML
     private RadioButton wc2;
 
+    @FXML
+    private Image houseImage;
+
     private Map<String, XYChart.Series> seriesMap = new HashMap<>();
     private Measures measures;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+         //Añade un escuchador al Slider, usando para ello el método
+        // addListener al que se le pasa un ChangeListener
+        // Lo que se hace es cambiar el valor del diagrama mediante el valor que tiene
+        // el slider en cada momento, llamando al método.
         mySlider.valueProperty().addListener((a, b, c) -> {
 //            numberWAPs.setText(readings.getReadingsGreeterOrEqualTo(c.intValue()).getNumberOfReadings() + "");
             updateChartWithIntensity(c.intValue());
         });
     }
 
+    // Actualiza la vista con el entero que se le pasa.
     private void updateChartWithIntensity(int intensity) {
+        // Clase Readings -> Conjuntos de lecturas, que pueden instanciar otra clase Readings, que es otro conjunto.
         Readings readingsTotal;
         Readings readingsIntensity;
         Readings readingsIntensityWAP;
+
+        // Enumeración
         Room room;
         for(String roomString: seriesMap.keySet()) {
+            // Obtiene el subconjunto de lecturas para las habitaciones seleccionadas
             room = Room.valueOf(roomString);
             readingsTotal = measures.getVisibleReadings().getVisibleReadingByRoom(room);
             readingsIntensity = readingsTotal.getReadingsGreeterOrEqualTo(intensity);
+
+            // Actualiza todas las WAP para la habitación seleccionada, modificando la ventana
             XYChart.Series series = seriesMap.get(room.toString());
             float intensityTotal;
             float intensityLevel;
@@ -106,7 +123,9 @@ public class Controller implements Initializable {
     }
 
     private void removeSeries(Room room) {
+        // Elimina todos los datos de la habitación del diagrama
         readingsChart.getData().removeAll(seriesMap.get(room.toString()));
+        // Elimina la habitación del HashMap de series
         seriesMap.remove(room.toString());
     }
 
@@ -132,7 +151,9 @@ public class Controller implements Initializable {
         Number totalData;
         int level = (int)mySlider.getValue();
         int percentage;
+        // Por cada MAC
         for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
+
             totalData = readingsRoom.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
             categoryData = readingsRoom.getReadingsGreeterOrEqualTo(level).getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
 //            categoryData = readingsRoom.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
