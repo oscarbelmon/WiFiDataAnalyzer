@@ -33,7 +33,9 @@ public class ReadingsTest {
     @Test
     public void getVisibleReadingsByRoom() throws Exception {
         long accumulatedNumberReadings = 0;
-        for(Room room: Room.values()) {
+        //TODO: Apaño para que ejecute
+        House house = new House();
+        for(String room: house.getRoomsNames()) {
             accumulatedNumberReadings += readings.getVisibleReadingByRoom(room).getNumberOfReadings();
         }
         assertThat(accumulatedNumberReadings, is(totalNumberReadings));

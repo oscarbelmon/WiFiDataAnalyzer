@@ -9,11 +9,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
-import java.awt.*;
+import java.awt.Polygon;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,52 +24,33 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
+    // Elementos gráficos
+    // ===========================================================
     @FXML
     private Slider mySlider;
     @FXML
     private Label numberWAPs;
-
     @FXML
     private BarChart<String, Number> readingsChart;
     @FXML
     private CategoryAxis waps;
-    private Readings readings;
-    private MetaData metaData;
+    @FXML
+    private ImageView houseImage;
+    @FXML
+    private Button changeHouse;
+    // ==============================================================
 
-    @FXML
-    private RadioButton kitchen;
-    @FXML
-    private RadioButton diningroom;
-    @FXML
-    private RadioButton balcony;
-    @FXML
-    private RadioButton bedroom1;
-    @FXML
-    private RadioButton bedroom2;
-    @FXML
-    private RadioButton bedroom3;
-    @FXML
-    private RadioButton corridor;
-    @FXML
-    private RadioButton drawingroom;
-    @FXML
-    private RadioButton wc1;
-    @FXML
-    private RadioButton wc2;
-
-    @FXML
-    private Image houseImage;
-
+    // Variables del controlador
+    // ==============================================================
     private Map<String, XYChart.Series> seriesMap = new HashMap<>();
     private Measures measures;
-
+    private House house;
+    private Readings readings;
+    private MetaData metaData;
+    // ==============================================================
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-         //Añade un escuchador al Slider, usando para ello el método
-        // addListener al que se le pasa un ChangeListener
-        // Lo que se hace es cambiar el valor del diagrama mediante el valor que tiene
-        // el slider en cada momento, llamando al método.
         mySlider.valueProperty().addListener((a, b, c) -> {
 //            numberWAPs.setText(readings.getReadingsGreeterOrEqualTo(c.intValue()).getNumberOfReadings() + "");
             updateChartWithIntensity(c.intValue());
@@ -80,16 +64,13 @@ public class Controller implements Initializable {
         Readings readingsIntensity;
         Readings readingsIntensityWAP;
 
-        // Enumeración
-        Room room;
         for(String roomString: seriesMap.keySet()) {
             // Obtiene el subconjunto de lecturas para las habitaciones seleccionadas
-            room = Room.valueOf(roomString);
-            readingsTotal = measures.getVisibleReadings().getVisibleReadingByRoom(room);
+            readingsTotal = measures.getVisibleReadings().getVisibleReadingByRoom(roomString);
             readingsIntensity = readingsTotal.getReadingsGreeterOrEqualTo(intensity);
 
             // Actualiza todas las WAP para la habitación seleccionada, modificando la ventana
-            XYChart.Series series = seriesMap.get(room.toString());
+            XYChart.Series series = seriesMap.get(roomString);
             float intensityTotal;
             float intensityLevel;
             int result;
@@ -103,30 +84,19 @@ public class Controller implements Initializable {
         }
     }
 
-    private void updateChart(Room room) {
-        if(seriesMap.containsKey(room.toString()) == false) {
+    private void updateChart(String room) {
+        if(seriesMap.containsKey(room) == false) {
             Readings readingsRoom = readings.getVisibleReadingByRoom(room);
             if(seriesMap.containsKey("ALL")) setSeries(readingsRoom, room.toString());
             else addSeries(readingsRoom, room.toString());
         }
     }
 
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
-        RadioButton source = (RadioButton)(event.getSource());
-        String room = source.getId().toUpperCase();
-        if(source.isSelected() == true) {
-            updateChart(Room.valueOf(room));
-        } else if(source.isSelected() == false){
-            removeSeries(Room.valueOf(room));
-        }
-    }
-
-    private void removeSeries(Room room) {
+    private void removeSeries(String room) {
         // Elimina todos los datos de la habitación del diagrama
-        readingsChart.getData().removeAll(seriesMap.get(room.toString()));
+        readingsChart.getData().removeAll(seriesMap.get(room));
         // Elimina la habitación del HashMap de series
-        seriesMap.remove(room.toString());
+        seriesMap.remove(room);
     }
 
     private XYChart.Series<String, Number> seriesMaxIntensity(Readings readingsRoom, String label) {
@@ -202,6 +172,43 @@ public class Controller implements Initializable {
         setSeries(readings, "ALL");
     }
 
+    /**
+     * Escuchadores
+     */
+    @FXML
+    private void handleButtonAction(ActionEvent event) {
+        RadioButton source = (RadioButton)(event.getSource());
+        String room = source.getId().toUpperCase();
+        if(source.isSelected() == true) {
+            updateChart(room);
+        } else if(source.isSelected() == false){
+            removeSeries(room);
+        }
+    }
+
+    @FXML
+    private void handleImageClicked(MouseEvent event) {
+        double mouseXPosition = event.getX();
+        double mouseYPosition = event.getY();
+
+        String clickedPosition = getClickedPosition(mouseXPosition, mouseYPosition);
+        if (clickedPosition != null) {
+            if (!seriesMap.containsKey(clickedPosition.toString()))
+                updateChart(clickedPosition);
+            else
+                removeSeries(clickedPosition);
+        }
+    }
+
+    @FXML
+    private void handleHouseLoadButtonAction(ActionEvent event) {
+        System.out.println("Pulsado");
+    }
+
+    /**
+     * Setters
+     */
+
     public void setReadings(Readings readings) {
         this.readings = readings;
     }
@@ -213,5 +220,24 @@ public class Controller implements Initializable {
 
     public void setMeasures(Measures measures) {
         this.measures = measures;
+    }
+
+    public void setHouse(House house) {
+        this.house = house;
+    }
+
+
+    /**
+     * Métodos auxiliares
+     */
+    private String getClickedPosition(double mouseX, double mouseY) {
+        String[] locations = house.getRoomsNames();
+
+        for (String location: locations) {
+            Polygon actualLocation = house.getRoom(location);
+            if (actualLocation.contains(mouseX, mouseY))
+                return location;
+        }
+        return null;
     }
 }

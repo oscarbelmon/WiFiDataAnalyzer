@@ -8,6 +8,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import mvc.Controller;
 
+import java.awt.*;
+import java.io.FileNotFoundException;
+import java.util.InvalidPropertiesFormatException;
+
 /**
  * Created by oscar on 26/09/15.
  */
@@ -19,49 +23,99 @@ public class Main extends Application {
     private static Measures measures;
 
     public static void main(String[] args) {
-        loadData(args[0]);
+        House house = loadHouse();
+        loadData(args[0], house);
         launch(args); // De Application
-//        ejecuta(args[0]);
     }
 
     //Carga los datos del fichero JSON
-    private static void loadData(final String metaDataFileName) {
+    private static void loadData(final String metaDataFileName, House house) {
         metaData = MetaDataReader.fromFile(metaDataFileName);
         measures = MeasuresReader.fromFile(metaData);
     }
 
-    private static void ejecuta(final String metaDataFileName) {
-        metaData = MetaDataReader.fromFile(metaDataFileName);
-        measures = MeasuresReader.fromFile(metaData);
-//        MetaData metaData = MetaDataReader.fromFile("src/main/resources/meta_data.json");
-//        Measures measures = MeasuresReader.fromFile("src/main/resources/sensorstrainingData_belmonte.txt", metaData);
-//        Measures filtered = measures.getMeasuresReadingsGreeterOrEqualTo(-20);
-//        System.out.println(filtered.getNumberMeasures());
-//        System.out.println(measures.getMeasureByIndex(1000).getVisibleReadings().size());
-//        System.out.println(measures.getMeasuresByRoom(Room.BEDROOM1).getMeanNumberVisibleWAPs());
-//        System.out.println(measures.getMeasuresByRoomAndRelativePosition(Room.BEDROOM1, RelativePosition.CENTER).getMeanNumberVisibleWAPs());
-//        System.out.println(measures.getMeasuresByRoomAndRelativePosition(Room.BEDROOM1, RelativePosition.CORNER).getMeanNumberVisibleWAPs());
-//        System.out.println(measures.getMeasuresByRoomAndRelativePosition(Room.BEDROOM1, RelativePosition.DOOR).getMeanNumberVisibleWAPs());
-//        System.out.println(measures.getMeasuresByRoomAndRelativePosition(Room.BEDROOM2, RelativePosition.CENTER).getMeanNumberVisibleWAPs());
-//        System.out.println(measures.getMeasuresByRoomAndRelativePosition(Room.BEDROOM2, RelativePosition.CORNER).getMeanNumberVisibleWAPs());
-//        System.out.println(measures.getMeasuresByRoomAndRelativePosition(Room.BEDROOM2, RelativePosition.DOOR).getMeanNumberVisibleWAPs());
-//        System.out.println(measures.getMeasuresByRoomAndRelativePosition(Room.BEDROOM3, RelativePosition.CENTER).getMeanNumberVisibleWAPs());
-//        System.out.println(measures.getMeasuresByRoomAndRelativePosition(Room.BEDROOM3, RelativePosition.CORNER).getMeanNumberVisibleWAPs());
-//        System.out.println(measures.getMeasuresByRoomAndRelativePosition(Room.BEDROOM3, RelativePosition.DOOR).getMeanNumberVisibleWAPs());
-//        System.out.println(measures.getNumberMeasures());
-//        System.out.println(measures.getNumberVisibleReadings());
-//        System.out.println(measures.getVisibleReadings().getNumberOfReadings());
-//        WapReadings wapReadings = new WapReadings(measures);
-//        System.out.println(wapReadings.getVisibleReadingByRoom(Room.BEDROOM1).getNumberOfReadings());
-//        System.out.println(wapReadings.getVisibleReadingsByWAP(metaData.getWAPByIndex(2)).getNumberOfReadings());
+    private static House loadHouse() {
+        //TODO Provisional
+        int[] kitchenXPoints = {35, 139, 139, 63, 63, 34};
+        int[] kitchenYPoints = {40, 40, 138, 138, 109, 109};
 
-        Readings allVisible = measures.getVisibleReadings();
-        Readings bedroom1Visible = allVisible.getVisibleReadingByRoom(Room.BEDROOM1);
-        System.out.println(bedroom1Visible.getNumberOfReadings());
-        for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
-            Readings bedroom1WAPVisible = bedroom1Visible.getVisibleReadingsByWAP(metaData.getWAPByIndex(i));
-            System.out.println(i + " --> " + bedroom1WAPVisible.getNumberOfReadings());
+        int[] diningRoomXPoints = {142, 270, 270, 142};
+        int[] diningRoomYPoints = {13, 13, 170, 170};
+
+        int[] corridorXPoints = {71, 71, 160, 161, 188, 188, 189, 189, 187, 187, 139, 139, 142, 141, 139, 138};
+        int[] corridorYPoints = {141, 192, 192, 284, 284, 212, 212, 201, 200, 175, 135, 166, 166, 145, 145, 142};
+
+        int[] balconyXPoints = {33, 34, 97, 97, 115, 115, 135, 135, 105, 105};
+        int[] balconyYPoints = {10, 33, 34, 38, 38, 35, 35, 13, 11, 10};
+
+        int[] bedroom1XPoints = {70, 71, 156, 157};
+        int[] bedroom1YPoints = {208, 284, 284, 209};
+
+        int[] bedroom2XPoints = {161, 161, 117, 117, 113, 113, 118, 118, 188, 188};
+        int[] bedroom2YPoints = {285, 301, 300, 303, 303, 374, 374, 378, 378, 287};
+
+        int[] bedroom3XPoints = {189, 189, 192, 192, 266, 266, 271, 270, 250, 250};
+        int[] bedroom3YPoints = {269, 282, 282, 278, 378, 375, 376, 302, 302, 267};
+
+        int[] drawingRoomXPoints = {};
+        int[] drawingRoomYPoints = {};
+
+        int[] wc1XPoints = {191, 269, 270, 191};
+        int[] wc1YPoints = {175, 176, 217, 216};
+
+        int[] wc2XPoints = {191, 270, 270, 191};
+        int[] wc2YPoints = {263, 264, 219, 219};
+
+        Polygon kitchen = new Polygon(kitchenXPoints, kitchenYPoints, kitchenXPoints.length);
+        Polygon diningRoom = new Polygon(diningRoomXPoints, diningRoomYPoints, diningRoomXPoints.length);
+        Polygon corridor = new Polygon(corridorXPoints, corridorYPoints, corridorXPoints.length);
+        Polygon balcony = new Polygon(balconyXPoints, balconyYPoints, balconyXPoints.length);
+        Polygon bedroom1 = new Polygon(bedroom1XPoints, bedroom1YPoints, bedroom1XPoints.length);
+        Polygon bedroom2 = new Polygon(bedroom2XPoints, bedroom2YPoints, bedroom2XPoints.length);
+        Polygon bedroom3 = new Polygon(bedroom3XPoints, bedroom3YPoints, bedroom3XPoints.length);
+        Polygon drawingRoom = new Polygon(drawingRoomXPoints, drawingRoomYPoints, drawingRoomXPoints.length);
+        Polygon wc1 = new Polygon(wc1XPoints, wc1YPoints, wc1XPoints.length);
+        Polygon wc2 = new Polygon(wc2XPoints, wc2YPoints, wc2XPoints.length);
+
+        House house = new House();
+
+        house.addNewRoom("KITCHEN");
+        house.addNewRoom("DININGROOM");
+        house.addNewRoom("CORRIDOR");
+        house.addNewRoom("BALCONY");
+        house.addNewRoom("BEDROOM1");
+        house.addNewRoom("BEDROOM2");
+        house.addNewRoom("BEDROOM3");
+        house.addNewRoom("DRAWINGROOM");
+        house.addNewRoom("WC1");
+        house.addNewRoom("WC2");
+
+        house.addRoomPolygon("KITCHEN", kitchen);
+        house.addRoomPolygon("DININGROOM", diningRoom);
+        house.addRoomPolygon("CORRIDOR", corridor);
+        house.addRoomPolygon("BALCONY", balcony);
+        house.addRoomPolygon("BEDROOM1", bedroom1);
+        house.addRoomPolygon("BEDROOM2", bedroom2);
+        house.addRoomPolygon("BEDROOM3", bedroom3);
+        house.addRoomPolygon("DRAWINGROOM", drawingRoom);
+        house.addRoomPolygon("WC1", wc1);
+        house.addRoomPolygon("WC2", wc2);
+
+        return house;
+    }
+
+    private static House loadHouse(final String jsonHouseFile) {
+        House house = new House();
+        try {
+            house.loadHouseFromJsonFile(jsonHouseFile);
         }
+        catch (FileNotFoundException fe) {
+            //TODO carga de la casa
+        }
+        catch (InvalidPropertiesFormatException ie) {
+
+        }
+        return house;
     }
 
     // 1) Inicializa la interfaz gráfica (carga sample.fxml)
@@ -69,8 +123,6 @@ public class Main extends Application {
     // Stage es una clase que extiende a Window (interfaz gráfica)
     @Override
     public void start(Stage primaryStage) throws Exception {
-//        System.out.println("Tres");
-
         // Carga la jerarquía del objeto desde un fxml
         FXMLLoader loader = new FXMLLoader();
 
@@ -90,6 +142,7 @@ public class Main extends Application {
         controller.setReadings(measures.getVisibleReadings());
         controller.setMetaData(metaData);
         controller.setMeasures(measures);
+        controller.setHouse(this.loadHouse());
         primaryStage.show();
     }
 }
