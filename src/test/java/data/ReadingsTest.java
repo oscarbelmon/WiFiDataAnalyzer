@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.core.Is.*;
-
+/**
 public class ReadingsTest {
     private static String metaDataFile = "src/main/resources/meta_data.json";
     private static MetaData metaData;
@@ -50,3 +50,4 @@ public class ReadingsTest {
         assertThat(accumulatedNumberReadings, is(totalNumberReadings));
     }
 }
+**/

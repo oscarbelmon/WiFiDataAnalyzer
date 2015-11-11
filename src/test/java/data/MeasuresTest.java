@@ -9,6 +9,8 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by oscar on 27/09/15.
  */
+
+/**
 public class MeasuresTest {
     private static MetaData metaData;
     private static String metaDataFile = "src/main/resources/meta_data.json";
@@ -31,3 +33,4 @@ public class MeasuresTest {
         assertThat(measures.getMeasuresByRoom(Room.BALCONY).getNumberMeasures(), is(530));
     }
 }
+ **/

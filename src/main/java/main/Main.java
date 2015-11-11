@@ -24,14 +24,14 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         House house = loadHouse();
-        loadData(args[0], house);
+        loadData(args[0], house.getRoomsNames());
         launch(args); // De Application
     }
 
     //Carga los datos del fichero JSON
-    private static void loadData(final String metaDataFileName, House house) {
+    private static void loadData(final String metaDataFileName, String[] rooms) {
         metaData = MetaDataReader.fromFile(metaDataFileName);
-        measures = MeasuresReader.fromFile(metaData);
+        measures = MeasuresReader.fromFile(metaData, rooms);
     }
 
     private static House loadHouse() {

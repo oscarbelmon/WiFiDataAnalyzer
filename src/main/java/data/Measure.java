@@ -7,18 +7,18 @@ import java.util.Date;
  */
 public class Measure {
     private Readings readings;
-    private Room room;
+    private String room;
     private RelativePosition relativePosition;
     private Date timeStamp;
 
-    public Measure(Readings readings, Room romm, RelativePosition relativePosition, Date timeStamp) {
+    public Measure(Readings readings, String romm, RelativePosition relativePosition, Date timeStamp) {
         this.readings = readings;
         this.room = romm;
         this.relativePosition = relativePosition;
         this.timeStamp = timeStamp;
     }
 
-    public Room getRoom() {
+    public String getRoom() {
         return room;
     }
 

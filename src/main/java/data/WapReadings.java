@@ -17,9 +17,9 @@ public class WapReadings {
         visibleReadings = measures.getVisibleReadings();
     }
 
-    public Readings getVisibleReadingByRoom(Room room) {
+    public Readings getVisibleReadingByRoom(String room) {
         return new Readings(visibleReadings.getReadings().stream()
-                .filter(r -> r.getRoom() == room)
+                .filter(r -> r.getRoom().equals(room))
                 .collect(Collectors.toList()));
     }
 

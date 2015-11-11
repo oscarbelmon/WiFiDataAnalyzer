@@ -23,7 +23,7 @@ public class Measures {
             .collect(Collectors.toList()));
     }
 
-    public Measures getMeasuresByRoomAndRelativePosition(Room room, RelativePosition relativePosition) {
+    public Measures getMeasuresByRoomAndRelativePosition(String room, RelativePosition relativePosition) {
         return new Measures(measures.stream()
             .filter(m -> m.getRoom().equals(room))
             .filter(m -> m.getRelativePosition() == relativePosition)

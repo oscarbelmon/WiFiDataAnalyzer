@@ -9,11 +9,11 @@ public class Reading {
     public static int NO_VISIBLE = 100;
     private int intensity;
     private WAP wap;
-    private Room room;
+    private String room;
     private RelativePosition relativePosition;
     private Date date;
 
-    public Reading(int intensity, WAP wap, Room room, RelativePosition relativePosition, Date date) {
+    public Reading(int intensity, WAP wap, String room, RelativePosition relativePosition, Date date) {
         this.intensity = intensity;
         this.wap = wap;
         this.room = room;
@@ -29,7 +29,7 @@ public class Reading {
         return wap;
     }
 
-    public Room getRoom() {
+    public String getRoom() {
         return room;
     }
 
