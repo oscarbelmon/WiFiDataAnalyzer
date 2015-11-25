@@ -3,7 +3,19 @@ package data;
 import java.util.Date;
 
 /**
- * Created by oscar on 27/09/15.
+ * Reading
+ *
+ * Lectura individual. Una medición se compone de muchas lecturas.
+ * Cada lectura individual obtiene una intensidad.
+ * Se guardan los siguientes datos:
+ *
+ * - Intensidad.
+ * - WAP.
+ * - Habitación.
+ * - Posición relativa dentro de la habitación.
+ * - Fecha en la que fue tomada.
+ *
+ * Hay métodos para obtener estos datos.
  */
 public class Reading {
     public static int NO_VISIBLE = 100;

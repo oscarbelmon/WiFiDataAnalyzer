@@ -1,17 +1,14 @@
 package data;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import javafx.fxml.FXML;
-import com.google.gson.JsonParser;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.awt.Polygon;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.InvalidPropertiesFormatException;
 
 /**
  * House
@@ -29,13 +26,12 @@ import java.util.*;
 public class House {
 
     private HashMap<String, Polygon> house = new HashMap();
-    private HashSet<String> rooms = new HashSet();
-    private String[] stringRooms;
+    private ArrayList<String> rooms = new ArrayList<>();
+
     @FXML
     private ImageView houseImage;
 
     public House() {}
-
 
     /**
      * Guarda un polígono asociado a una habitación.
@@ -59,14 +55,23 @@ public class House {
      * @return - True si lo añade. False si ya existía.
      */
     public boolean addNewRoom(String room) {
+        if (room != null)
+            return rooms.add(room);
+        return false;
+    }
+
+    /**
+     * Elimina una habitación y sus polígonos asociados.
+     *
+     * @param room - Identificador de la habitación.
+     * @return - True si la elimina. False si no.
+     */
+    public boolean deleteRoom(String room) {
         if (room != null) {
-            boolean added = rooms.add(room);
-            if (added) {
-                Object[] roomsInSet = rooms.toArray();
-                stringRooms = new String[roomsInSet.length];
-                for (int i = 0; i < roomsInSet.length; i++) {
-                    stringRooms[i] = (String) roomsInSet[i];
-                }
+            if (house.containsKey(room)) {
+                house.remove(room);
+                rooms.remove(room);
+                return true;
             }
         }
         return false;
@@ -83,15 +88,20 @@ public class House {
 
     /**
      * Obtiene todos los nombres de las habitaciones.
-     *
      * @return - Array de Strings, siendo cada elemento una habitación.
      */
-    public String[] getRoomsNames() { return stringRooms; }
+    public String[] getRoomsNames() {
+        Object[] aux = rooms.toArray();
+        String[] roomsNames = new String[aux.length];
+        for (int i = 0; i < aux.length; i++) {
+            roomsNames[i] = (String) aux[i];
+        }
+        return roomsNames;
+    }
 
 
     /**
      * Devuelve el número de habitaciones.
-     *
      * @return - Número de habitaciones. (int)
      */
     public int numberOfRooms() {
@@ -101,7 +111,6 @@ public class House {
 
     /**
      * Devuelve la imagen asociada a la casa.
-     *
      * @return - ImageView asociada.
      */
     public ImageView getHouseImage() {
@@ -134,55 +143,9 @@ public class House {
      * @throws IllegalArgumentException - Si el formato de los argumentos en el fichero Json no es correcto.
      * Ej: Número de puntos X distinto al número de puntos Y.
      */
-    public void loadHouseFromJsonFile(String jsonFile) throws FileNotFoundException, InvalidPropertiesFormatException, IllegalArgumentException {
-        //TODO: Modificar para adaptar al formato GeoJson
-        // Carga fichero JSON de la casa
-        JsonParser parser = new JsonParser();
-        Object parsedFile = parser.parse(new FileReader(jsonFile));
-        JsonObject houseLoaded = (JsonObject) parsedFile;
+    public void loadHouseFromJsonFile(final String jsonFile) {
+        //TODO
+        Gson gsonParser = new Gson();
 
-        // Carga parámetros de la casa
-        String houseMapDir = houseLoaded.get("imageSource").getAsString();
-        Image houseImage = new Image(houseMapDir);
-        JsonArray jsonRoomsArray = houseLoaded.getAsJsonArray("rooms");
-        HashSet<String> rooms = new HashSet();
-        HashMap<String, Polygon> house = new HashMap();
-
-        // Recorro todas las habitaciones del fichero
-        // comprobando que no hayan dos habitaciones iguales y que el nº de puntos sea correcto.
-        Iterator<JsonElement> roomsIterator = jsonRoomsArray.iterator();
-        for (int i = 0; i < jsonRoomsArray.size(); i++) {
-            JsonArray room = roomsIterator.next().getAsJsonArray();
-            //TODO comprobar si funciona
-            String roomName = room.getAsString();
-            if (!rooms.add(roomName)) {
-                throw new InvalidPropertiesFormatException("The names of all the rooms must be different.\n" + "Failed in: " + roomName);
-            }
-
-            JsonArray roomXPoints = room.get(0).getAsJsonArray();
-            JsonArray roomYPoints = room.get(1).getAsJsonArray();
-            int[] xPoints = new int[roomXPoints.size()];
-            int[] yPoints = new int[roomYPoints.size()];
-
-            if (xPoints.length != yPoints.length) {
-                throw new InvalidPropertiesFormatException("The number of points in x must be equal to the number of points in y.\n" + "Failed in: " + roomName);
-            }
-
-            Iterator<JsonElement> pointsXIterator = roomXPoints.iterator();
-            Iterator<JsonElement> pointsYIterator = roomYPoints.iterator();
-            for (int j = 0; i < xPoints.length; i++) {
-                xPoints[j] = pointsXIterator.next().getAsInt();
-                yPoints[j] = pointsYIterator.next().getAsInt();
-
-            }
-
-            Polygon roomPolygon = new Polygon(xPoints, yPoints, xPoints.length);
-            house.put(roomName, roomPolygon);
-        }
-        // Si el cargado ha sido correcto:
-        this.house = house;
-        this.rooms = rooms;
-        this.houseImage = new ImageView();
-        this.houseImage.setImage(houseImage);
     }
 }

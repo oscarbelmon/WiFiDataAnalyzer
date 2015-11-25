@@ -9,7 +9,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by oscar on 27/09/15.
+ * MeasuresReader
+ *
+ * Cargador de Measures.
+ *
+ * Carga las mediciones desde un archivo.
  */
 public class MeasuresReader {
     private String[] rooms;
@@ -43,7 +47,10 @@ public class MeasuresReader {
         int numberOfMacs = metaData.getNumberOfMacs();
         String data[] = measure.split(" ");
         List<Reading> readings = new ArrayList<>();
-        String room = rooms[Integer.parseInt(data[numberOfMacs])];
+
+        int roomPosition = data.length -3;
+        String room = rooms[Integer.parseInt(data[roomPosition])];
+
         RelativePosition relativePosition = RelativePosition.values()[Integer.parseInt(data[numberOfMacs+1])];
         Date timeStap = new Date(Integer.parseInt(data[numberOfMacs+2]));
         for(int i = 0; i < numberOfMacs; i++) {

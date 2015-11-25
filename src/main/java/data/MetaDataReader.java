@@ -8,7 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
- * Created by oscar on 27/09/15.
+ * MetaDataReader
+ *
+ * Carga los datos de un fichero y devuelve un objeto MetaData.
  */
 public class MetaDataReader {
     public static MetaData fromFile(String fileName) {

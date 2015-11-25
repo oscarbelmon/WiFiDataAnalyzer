@@ -49,17 +49,24 @@ public class Controller implements Initializable {
     private MetaData metaData;
     // ==============================================================
 
+
+    /**
+     * Añade el escuchador al slider.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         mySlider.valueProperty().addListener((a, b, c) -> {
-//            numberWAPs.setText(readings.getReadingsGreeterOrEqualTo(c.intValue()).getNumberOfReadings() + "");
             updateChartWithIntensity(c.intValue());
         });
     }
 
-    // Actualiza la vista con el entero que se le pasa.
+
+    /**
+     * Actualiza el gráfico con la intensidad que se le pasa.
+     * Usado por el slider. Escuchador slider -> updateChartWithIntensity(Parámetro)
+     * @param intensity - Parámetro de intensidad.
+     */
     private void updateChartWithIntensity(int intensity) {
-        // Clase Readings -> Conjuntos de lecturas, que pueden instanciar otra clase Readings, que es otro conjunto.
         Readings readingsTotal;
         Readings readingsIntensity;
         Readings readingsIntensityWAP;
@@ -77,13 +84,18 @@ public class Controller implements Initializable {
             for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
                 intensityTotal = readingsTotal.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
                 intensityLevel = readingsIntensity.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
-                result = (int)(intensityLevel/intensityTotal*100);
+                result = (int)(intensityLevel/intensityTotal*100); //Intensidad porcentual
                 XYChart.Data<String, Number> data = (XYChart.Data<String, Number>)series.getData().get(i);
                 data.setYValue(result);
             }
         }
     }
 
+
+    /**
+     * Actualiza el gráfico añadiendo la habitación que se pasa como parámetro.
+     * @param room - Nombre de la habitación.
+     */
     private void updateChart(String room) {
         if(seriesMap.containsKey(room) == false) {
             Readings readingsRoom = readings.getVisibleReadingByRoom(room);
@@ -92,6 +104,11 @@ public class Controller implements Initializable {
         }
     }
 
+
+    /**
+     * Elimina la habitación del gráfico.
+     * @param room - Habitación a eliminar.
+     */
     private void removeSeries(String room) {
         // Elimina todos los datos de la habitación del diagrama
         readingsChart.getData().removeAll(seriesMap.get(room));
@@ -99,20 +116,15 @@ public class Controller implements Initializable {
         seriesMap.remove(room);
     }
 
-    private XYChart.Series<String, Number> seriesMaxIntensity(Readings readingsRoom, String label) {
-        XYChart.Series<String, Number> serie = new XYChart.Series<>();
-        serie.setName(label);
-        String categoryName;
-        Number categoryData;
-        for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
-            categoryData = readingsRoom.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
-            categoryName = metaData.getWAPByIndex(i).getName();
-            serie.getData().add(new XYChart.Data<>(categoryName, categoryData));
-        }
-        seriesMap.put(label, serie);
-        return serie;
-    }
 
+    /**
+     * Crea y devuelve el gráfico. Lo inicializa con "ALL" y todos los valores a su máxima intensidad (100%).
+     * También le pone el nombre.
+     *
+     * @param readingsRoom - Lecturas de todas las habitaciones.
+     * @param label - Nombre del gráfico.
+     * @return - Gráfico.
+     */
     private XYChart.Series<String, Number> seriesMaxIntensity2(Readings readingsRoom, String label) {
         XYChart.Series<String, Number> serie = new XYChart.Series<>();
         serie.setName(label);
@@ -123,36 +135,24 @@ public class Controller implements Initializable {
         int percentage;
         // Por cada MAC
         for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
-
             totalData = readingsRoom.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
             categoryData = readingsRoom.getReadingsGreeterOrEqualTo(level).getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
-//            categoryData = readingsRoom.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
             percentage = (int)(categoryData.floatValue()/totalData.floatValue()*100);
             categoryName = metaData.getWAPByIndex(i).getName();
-//            serie.getData().add(new XYChart.Data<>(categoryName, categoryData));
             serie.getData().add(new XYChart.Data<>(categoryName, percentage));
         }
         seriesMap.put(label, serie);
         return serie;
     }
 
-    private XYChart.Series<String, Number> seriesWithIntensity(Readings readingsRoom, String label, int intensity) {
-        XYChart.Series<String, Number> serie = new XYChart.Series<>();
-        String categoryName;
-        Number categoryData;
-        for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
-            categoryData = readingsRoom.getVisibleReadingsByWAP(metaData.getWAPByIndex(i)).getNumberOfReadings();
-            categoryName = metaData.getWAPByIndex(i).getName();
-            serie.getData().add(new XYChart.Data<>(categoryName, categoryData));
-        }
-        return serie;
-    }
+
 
     private void addSeries(Readings readings, String label) {
         XYChart.Series series = seriesMaxIntensity2(readings, label);
         readingsChart.getData().addAll(series);
         seriesMap.put(label, series);
     }
+
 
     private void setSeries(Readings readings, String label) {
         XYChart.Series series = seriesMaxIntensity2(readings, label);
@@ -161,6 +161,11 @@ public class Controller implements Initializable {
         seriesMap.put(label, series);
     }
 
+
+    /**
+     * Coloca las WAPs en el gráfico, en la parte inferior.
+     * No varían durante el transcurso de la aplicación.
+     */
     private void populateChart() {
         String[] wapsArray = new String[metaData.getNumberOfMacs()];
         for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
@@ -175,17 +180,6 @@ public class Controller implements Initializable {
     /**
      * Escuchadores
      */
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
-        RadioButton source = (RadioButton)(event.getSource());
-        String room = source.getId().toUpperCase();
-        if(source.isSelected() == true) {
-            updateChart(room);
-        } else if(source.isSelected() == false){
-            removeSeries(room);
-        }
-    }
-
     @FXML
     private void handleImageClicked(MouseEvent event) {
         double mouseXPosition = event.getX();

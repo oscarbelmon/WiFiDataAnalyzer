@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by oscar on 27/09/15.
+ * Mesasures
+ *
+ * Contenedor de Measure que opera con todas las mediciones a la vez.
  */
 public class Measures {
     private List<Measure> measures;

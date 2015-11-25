@@ -6,7 +6,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Created by oscar on 27/09/15.
+ * Readings
+ *
+ * Contenedor de Reading.
+ *
+ * IMPORTANTE
+ * Los guarda todos, también los guarda por WAP y por habitación.
+ * También guarda un subconjunto (objeto Readings) de los que son visibles.
+ *
+ * Tiene métodos para obtener los datos que cumplan ciertas condiciones.
  */
 public class Readings {
     private List<Reading> readings;
