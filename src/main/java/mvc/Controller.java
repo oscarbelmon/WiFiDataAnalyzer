@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -13,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
@@ -218,6 +220,7 @@ public class Controller implements Initializable {
 
     public void setHouse(House house) {
         this.house = house;
+        changeImage(house.getImageDir());
     }
 
 
@@ -233,5 +236,12 @@ public class Controller implements Initializable {
                 return location;
         }
         return null;
+    }
+
+    private boolean changeImage(String uri) {
+        //TODO revisar si falla
+        Image image = new Image(uri);
+        houseImage.setImage(image);
+        return true;
     }
 }

@@ -1,11 +1,14 @@
 package data;
 
-import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.awt.Polygon;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.InvalidPropertiesFormatException;
@@ -28,8 +31,7 @@ public class House {
     private HashMap<String, Polygon> house = new HashMap();
     private ArrayList<String> rooms = new ArrayList<>();
 
-    @FXML
-    private ImageView houseImage;
+    String imageUri;
 
     public House() {}
 
@@ -42,6 +44,8 @@ public class House {
      */
     public boolean addRoomPolygon(String room, Polygon polygon) {
         if (polygon != null) {
+            if (!rooms.contains(room))
+                rooms.add(room);
             house.put(room, polygon);
             return true;
         }
@@ -110,28 +114,11 @@ public class House {
 
 
     /**
-     * Devuelve la imagen asociada a la casa.
-     * @return - ImageView asociada.
+     * Devuelve la dirección de la imagen asociada a la casa.
      */
-    public ImageView getHouseImage() {
-        return houseImage;
+    public String getImageDir() {
+        return new String(imageUri);
     }
-
-
-    /**
-     * Modifica la imagen de la casa por otra.
-     *
-     * @param house - ImageView con la imagen ya cargada.
-     * @return - True si la cambia. False si no.
-     */
-    public boolean setHouseImage(ImageView house) {
-        if (house != null) {
-            houseImage = house;
-            return true;
-        }
-        return false;
-    }
-
 
     /**
      * Carga todos los datos de la casa a partir de un fichero Json que sigue el formato GeoJson y un esquema correcto.
@@ -143,9 +130,88 @@ public class House {
      * @throws IllegalArgumentException - Si el formato de los argumentos en el fichero Json no es correcto.
      * Ej: Número de puntos X distinto al número de puntos Y.
      */
-    public void loadHouseFromJsonFile(final String jsonFile) {
-        //TODO
-        Gson gsonParser = new Gson();
+    public boolean loadHouseFromJsonFile(final String jsonFile) {
+        //TODO Refactorizar
+        try {
+            FileReader file = new FileReader(jsonFile);
+            JsonReader reader = new JsonReader(file);
 
+            // Salto la primera parte del documento (id y title)
+            reader.beginObject();
+
+            for(int i = 0; i < 2; i++) {
+                reader.nextName();
+                reader.nextString();
+            }
+
+            reader.nextName();
+            reader.beginObject();
+            reader.nextName();
+
+            // Extrae y añade la imagen de la casa
+            imageUri = reader.nextString();
+
+            reader.endObject();
+
+            // Etiqueta geo -> Comienzo a crear los polígonos
+            reader.nextName();
+            reader.beginObject();
+
+            reader.nextName();
+            reader.nextString();
+            reader.nextName();
+
+            // Array features (featureCollection)
+            // Cada iteración del siguiente bucle -> Lee e introduce una habitación y le asocia su polígono
+            reader.beginArray();
+
+            while (reader.hasNext()) {
+                reader.beginObject();
+                reader.nextName();
+                reader.nextString();
+                reader.nextName();
+                reader.beginObject();
+                reader.endObject();
+                reader.nextName();
+                // Habitación
+                String room = reader.nextString();
+                this.addNewRoom(room);
+
+                // Objeto geometry -> Puntos del polígono
+                reader.nextName();
+                reader.beginObject();
+                reader.nextName();
+                reader.nextString();
+                reader.nextName();
+                // Coordenadas del objeto
+                reader.beginArray();
+                reader.beginArray();
+
+                Polygon associated = new Polygon();
+
+                while (reader.hasNext()) {
+                    reader.beginArray();
+                    int x = reader.nextInt();
+                    int y = reader.nextInt();
+                    associated.addPoint(x, y);
+                    reader.endArray();
+                }
+
+                this.addRoomPolygon(room, associated);
+
+                reader.endArray();
+                reader.endArray();
+                reader.endObject();
+                reader.endObject();
+            }
+
+            // Termino de leer los polígonos y no me interesa más información -> Cierro
+            reader.close();
+            return true;
+        }
+        catch (IOException f) {
+            f.printStackTrace();
+            return false;
+        }
     }
 }

@@ -46,9 +46,9 @@
    <left>
       <VBox alignment="CENTER" spacing="10">
          <children>
-            <ImageView fitHeight="400" fitWidth="300" onMouseClicked="#handleImageClicked">
+            <ImageView fx:id="houseImage" fitHeight="400" fitWidth="300" onMouseClicked="#handleImageClicked">
                <image>
-                  <Image url="/gui/planoEscaladoColores.jpg"/>
+
                </image>
             </ImageView>
          </children>
