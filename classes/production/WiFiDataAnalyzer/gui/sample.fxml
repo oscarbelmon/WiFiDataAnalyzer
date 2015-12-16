@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mvc.Controller">
+    <!--<top>
+       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+          <children>
+             <HBox prefHeight="65.0" prefWidth="419.0" spacing="10.0">
+                <children>
+                   <VBox>
+                      <children>
+                         <RadioButton fx:id="kitchen" mnemonicParsing="false" onAction="#handleButtonAction" text="Kitchen" />
+                         <RadioButton fx:id="diningroom" mnemonicParsing="false" onAction="#handleButtonAction" text="Dining room" />
+                         <RadioButton fx:id="balcony" mnemonicParsing="false" onAction="#handleButtonAction" text="Balcony" />
+                         <RadioButton fx:id="bedroom1" mnemonicParsing="false" onAction="#handleButtonAction" text="Bedroom1" />
+                         <RadioButton fx:id="bedroom2" mnemonicParsing="false" onAction="#handleButtonAction" text="Bedroom2" />
+                      </children>
+                   </VBox>
+                   <VBox prefHeight="94.0" prefWidth="127.0">
+                      <children>
+                         <RadioButton fx:id="bedroom3" mnemonicParsing="false" onAction="#handleButtonAction" text="Bedroom3" />
+                         <RadioButton fx:id="corridor" mnemonicParsing="false" onAction="#handleButtonAction" text="Corridor" />
+                         <RadioButton fx:id="drawingroom" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="18.0" prefWidth="183.0" text="Drawing room" />
+                         <RadioButton fx:id="wc1" mnemonicParsing="false" onAction="#handleButtonAction" text="WC1" />
+                         <RadioButton fx:id="wc2" mnemonicParsing="false" onAction="#handleButtonAction" text="WC2" />
+                      </children>
+                   </VBox>
+                </children>
+                <padding>
+                   <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                </padding>
+                <HBox.margin>
+                   <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                </HBox.margin>
+             </HBox>
+          </children>
+       </HBox>
+    </top>-->
+
+    <left>
+        <VBox alignment="CENTER" spacing="10">
+            <children>
+                <ImageView fx:id="houseImage" fitHeight="400" fitWidth="300" onMouseClicked="#handleImageClicked">
+                    <image>
+
+                    </image>
+                </ImageView>
+            </children>
+            <padding>
+                <Insets left="10" right="10" top="10" bottom="10"/>
+            </padding>
+            <children>
+                <Button fx:id="changeHouse" text="Change house" onAction="#handleHouseLoadButtonAction"></Button>
+            </children>
+        </VBox>
+    </left>
+
+    <bottom>
+        <Slider fx:id="mySlider" blockIncrement="1.0" majorTickUnit="10.0" max="0.0" min="-150.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="-150.0" BorderPane.alignment="CENTER" />
+    </bottom>
+    <center>
+        <BarChart fx:id="readingsChart" animated="false" title="Readings" BorderPane.alignment="CENTER">
+            <xAxis>
+                <CategoryAxis fx:id="waps" label="WAPs" side="BOTTOM" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Readings" side="LEFT" />
+            </yAxis>
+        </BarChart>
+    </center>
+</BorderPane>
