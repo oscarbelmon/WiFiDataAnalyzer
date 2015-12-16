@@ -1,7 +1,9 @@
 package data;
 
 /**
- * Created by oscar on 26/09/15.
+ * Range
+ *
+ * Acota el rango de la señal.
  */
 public class Range {
     private int min;

@@ -1,7 +1,9 @@
 package data;
 
 /**
- * Created by oscar on 26/09/15.
+ * RelativePosition
+ *
+ * Posiciones posibles dentro de una habitacion/área.
  */
 public enum RelativePosition {
     CENTER,

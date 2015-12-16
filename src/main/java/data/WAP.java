@@ -1,7 +1,13 @@
 package data;
 
 /**
- * Created by oscar on 26/09/15.
+ * WAP
+ *
+ * Almacena los datos de una WAP.
+ * - Nombre
+ * - MAC
+ *
+ * Contiene getters para obtener estos datos.
  */
 public class WAP {
     private String name;

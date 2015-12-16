@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by oscar on 27/09/15.
+ * Mesasures
+ *
+ * Contenedor de Measure que opera con todas las mediciones a la vez.
  */
 public class Measures {
     private List<Measure> measures;
@@ -17,17 +19,17 @@ public class Measures {
         return measures.size();
     }
 
-    public Measures getMeasuresByRoom(Room room) {
+    public Measures getMeasuresByRoom(String room) {
         return new Measures(measures.stream()
-            .filter(m -> m.getRoom() == room)
-            .collect(Collectors.toList()));
+                .filter(m -> m.getRoom().equals(room))
+                .collect(Collectors.toList()));
     }
 
-    public Measures getMeasuresByRoomAndRelativePosition(Room room, RelativePosition relativePosition) {
+    public Measures getMeasuresByRoomAndRelativePosition(String room, RelativePosition relativePosition) {
         return new Measures(measures.stream()
-            .filter(m -> m.getRoom() == room)
-            .filter(m -> m.getRelativePosition() == relativePosition)
-            .collect(Collectors.toList()));
+                .filter(m -> m.getRoom().equals(room))
+                .filter(m -> m.getRelativePosition() == relativePosition)
+                .collect(Collectors.toList()));
     }
 
     public Readings getVisibleReadings() {

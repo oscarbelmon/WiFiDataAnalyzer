@@ -3,22 +3,31 @@ package data;
 import java.util.Date;
 
 /**
- * Created by oscar on 26/09/15.
+ * Measure
+ *
+ * Contiene los datos relativos a una medición, que incluyen:
+ *
+ * - Lecturas de esa medición (datos medidos) -> Objeto Readings
+ * - Habitación en la que se ha realizado.
+ * - Posición relativa dentro de esa habitación.
+ * - Fecha en la que se realizó.
+ *
+ * Incluye getters para obtener la información.
  */
 public class Measure {
     private Readings readings;
-    private Room room;
+    private String room;
     private RelativePosition relativePosition;
     private Date timeStamp;
 
-    public Measure(Readings readings, Room romm, RelativePosition relativePosition, Date timeStamp) {
+    public Measure(Readings readings, String romm, RelativePosition relativePosition, Date timeStamp) {
         this.readings = readings;
         this.room = romm;
         this.relativePosition = relativePosition;
         this.timeStamp = timeStamp;
     }
 
-    public Room getRoom() {
+    public String getRoom() {
         return room;
     }
 

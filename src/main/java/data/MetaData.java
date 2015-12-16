@@ -3,11 +3,9 @@ package data;
 import java.util.List;
 
 /**
- * Created by oscar on 26/09/15.
- */
-
-/**
- * meta_data.json -> Programa
+ * MetaData
+ *
+ * Almacena los datos del fichero de casos de uso (entrenamiento).
  */
 public class MetaData {
     private String trainingDataFile;
