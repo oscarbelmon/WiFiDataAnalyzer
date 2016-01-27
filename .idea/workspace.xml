@@ -2,21 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c7674346-3083-45b1-b2fd-bfa4b768d636" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/data/House.class" afterPath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/data/House.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/data/Measures.class" afterPath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/data/Measures.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/main/Main.class" afterPath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/main/Main.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/mvc/Controller.class" afterPath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/mvc/Controller.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/gui/sample.fxml" afterPath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/gui/sample.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/home_data.json" afterPath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/home_data.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/data/House.java" afterPath="$PROJECT_DIR$/src/main/java/data/House.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/data/Measures.java" afterPath="$PROJECT_DIR$/src/main/java/data/Measures.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/data/MeasuresReader.java" afterPath="$PROJECT_DIR$/src/main/java/data/MeasuresReader.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/data/MetaDataReader.java" afterPath="$PROJECT_DIR$/src/main/java/data/MetaDataReader.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/main/Main.java" afterPath="$PROJECT_DIR$/src/main/java/main/Main.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/mvc/Controller.java" afterPath="$PROJECT_DIR$/src/main/java/mvc/Controller.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/gui/sample.fxml" afterPath="$PROJECT_DIR$/src/main/resources/gui/sample.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/home_data.json" afterPath="$PROJECT_DIR$/src/main/resources/home_data.json" />
     </list>
     <ignored path="WiFiDataAnalizer.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -70,8 +56,8 @@
       <file leaf-file-name="Controller.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/mvc/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.0828571">
-              <caret line="257" column="52" selection-start-line="257" selection-start-column="52" selection-end-line="257" selection-end-column="52" />
+            <state vertical-scroll-proportion="1.08">
+              <caret line="252" column="28" selection-start-line="252" selection-start-column="28" selection-end-line="252" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -765,12 +751,12 @@
       <workItem from="1453752567404" duration="31000" />
       <workItem from="1453752708362" duration="35000" />
       <workItem from="1453819017268" duration="17734000" />
-      <workItem from="1453906268528" duration="6780000" />
+      <workItem from="1453906268528" duration="7905000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31803000" />
+    <option name="totallyTimeSpent" value="32928000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -795,7 +781,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32864675" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32864675" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24962063" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24962063" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1022,8 +1008,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/mvc/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.0828571">
-          <caret line="257" column="52" selection-start-line="257" selection-start-column="52" selection-end-line="257" selection-end-column="52" />
+        <state vertical-scroll-proportion="1.08">
+          <caret line="252" column="28" selection-start-line="252" selection-start-column="28" selection-end-line="252" selection-end-column="28" />
           <folding />
         </state>
       </provider>

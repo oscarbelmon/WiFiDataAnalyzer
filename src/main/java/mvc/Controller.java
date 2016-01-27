@@ -233,14 +233,16 @@ public class Controller implements Initializable {
                     String dataFileExtension = dataFileNameParts[dataFileNameParts.length-1];
 
                     if (dataFileExtension.equals("json") && dataFile.canRead()) {
-                        House oldHouse = new House(house);
-                        if (house.loadHouseFromJsonFile(houseJsonFile.getAbsolutePath())) {
+                        House newHouse = new House();
+                        if (newHouse.loadHouseFromJsonFile(houseJsonFile.getAbsolutePath())) {
                             MetaData newMetadata = MetaDataReader.fromFile(dataFile.getPath());
                             if (newMetadata != null) {
-                                Measures newMeasures = MeasuresReader.fromFile(newMetadata, house.getRoomsNames());
+                                Measures newMeasures = MeasuresReader.fromFile(newMetadata, newHouse.getRoomsNames());
                                 if (newMeasures != null) {
-                                    metaData = newMetadata;
-                                    measures = newMeasures;
+                                    this.setMetaData(newMetadata);
+                                    this.setMeasures(newMeasures);
+                                    this.setHouse(newHouse);
+                                    this.setReadings(measures.getVisibleReadings());
                                 }
                                 else
                                     showErrorMessageLoadingADataFile();
@@ -248,14 +250,9 @@ public class Controller implements Initializable {
                             }
                             else
                                 showErrorMessageLoadingADataFile();
-
-                            this.changeImage(house.getImageDir());
-                            this.setMeasures(measures);
-                            this.setMetaData(metaData);
-                            this.setReadings(measures.getVisibleReadings());
+                            
                         }
                         else {
-                            this.setHouse(oldHouse);
                             Alert houseFileFormatError = new Alert(Alert.AlertType.ERROR);
                             houseFileFormatError.setTitle("Invalid house file format");
                             houseFileFormatError.setHeaderText("There has been a problem loading the house.");
