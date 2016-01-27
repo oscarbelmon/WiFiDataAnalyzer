@@ -1,7 +1,5 @@
 package data;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -25,10 +23,8 @@ public class MeasuresReader {
             String content = new String(Files.readAllBytes(Paths.get(fileName)));
             measures = parse(content, metaData, rooms);
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            return null;
         }
         return new Measures(measures);
     }

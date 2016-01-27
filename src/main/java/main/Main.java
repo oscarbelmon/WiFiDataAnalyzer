@@ -8,10 +8,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import mvc.Controller;
 
-import java.awt.*;
-import java.io.FileNotFoundException;
-import java.util.InvalidPropertiesFormatException;
-
 
 public class Main extends Application {
     //Lista de WAPs de la aplicación y metadatos
@@ -23,30 +19,10 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         house = new House();
-        if (loadHouse()) {
-            loadData(args[0], house.getRoomsNames());
-            launch(args); // De Application
-        }
-        else
-            System.out.print("Fallo al cargar la casa");
+        metaData = new MetaData();
+        measures = new Measures();
 
-    }
-
-    //Carga los datos del fichero JSON
-    private static void loadData(final String metaDataFileName, String[] rooms) {
-        metaData = MetaDataReader.fromFile(metaDataFileName);
-        measures = MeasuresReader.fromFile(metaData, rooms);
-    }
-
-    private static boolean loadHouse() {
-        //TODO habitación de más provisional
-        if (house.loadHouseFromJsonFile("src/main/resources/home_data.json")) {
-            house.addNewRoom("DRAWINGROOM");
-            house.addRoomPolygon("DRAWINGROOM", new Polygon());
-            return true;
-        }
-
-        return false;
+        launch(args);
     }
 
     // 1) Inicializa la interfaz gráfica (carga sample.fxml)
@@ -68,6 +44,7 @@ public class Main extends Application {
 
         // Crea la ventana propiamente dicha, pasando el Stream del fxml y dando el tamaño
         primaryStage.setScene(new Scene(root, 1000, 500));
+        primaryStage.setResizable(false);
 
         // Llama a métodos del controlador para pasar los datos y muestra la ventana
         controller.setReadings(measures.getVisibleReadings());

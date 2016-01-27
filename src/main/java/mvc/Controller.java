@@ -3,22 +3,28 @@ package mvc;
 import data.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
-import java.awt.Polygon;
+import java.awt.*;
+import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,8 +44,9 @@ public class Controller implements Initializable {
     private CategoryAxis waps;
     @FXML
     private ImageView houseImage;
-    @FXML
-    private Button changeHouse;
+
+    FileChooser chooser = new FileChooser();
+
     // ==============================================================
 
     // Variables del controlador
@@ -148,7 +155,6 @@ public class Controller implements Initializable {
     }
 
 
-
     private void addSeries(Readings readings, String label) {
         XYChart.Series series = seriesMaxIntensity2(readings, label);
         readingsChart.getData().addAll(series);
@@ -159,7 +165,7 @@ public class Controller implements Initializable {
     private void setSeries(Readings readings, String label) {
         XYChart.Series series = seriesMaxIntensity2(readings, label);
         readingsChart.getData().setAll(series);
-        seriesMap.remove("ALL");
+        //seriesMap.remove("ALL");
         seriesMap.put(label, series);
     }
 
@@ -176,7 +182,7 @@ public class Controller implements Initializable {
         ObservableList<String> wapNames = FXCollections.observableArrayList(wapsArray);
         waps.setCategories(wapNames);
         waps.setTickLabelRotation(90);
-        setSeries(readings, "ALL");
+        //setSeries(readings, "ALL");
     }
 
     /**
@@ -196,11 +202,226 @@ public class Controller implements Initializable {
         }
     }
 
+
+    /**
+     * Carga una casa a partir de dos ficheros .json, uno que define la imagen y los polígonos de la casa
+     * y otro que aporta los datos con todas las mediciones.
+     * @param event
+     */
     @FXML
-    private void handleHouseLoadButtonAction(ActionEvent event) {
-        System.out.println("Pulsado");
+    private void handleLoadHouseMenuAction(javafx.event.Event event) {
+        chooser.setTitle("Select a house .json file");
+        File houseJsonFile = chooser.showOpenDialog(new Stage());
+
+        if (houseJsonFile != null) {
+            String[] fileNameParts = houseJsonFile.getName().split("\\.");
+            String fileExtension = fileNameParts[fileNameParts.length-1];
+
+            if (fileExtension.equals("json") && houseJsonFile.canRead()) {
+                Alert houseOK = new Alert(Alert.AlertType.INFORMATION);
+                houseOK.setTitle("House file loaded correctly");
+                houseOK.setHeaderText("The house has been loaded correctly.");
+                houseOK.setContentText("Now, it's necessary to load a training data .json file \n" +
+                        "in order to create the graph.");
+                houseOK.showAndWait();
+
+                chooser.setTitle("Select a measures data .json file");
+                File dataFile = chooser.showOpenDialog(new Stage());
+
+                if (dataFile != null) {
+                    String[] dataFileNameParts = dataFile.getName().split("\\.");
+                    String dataFileExtension = dataFileNameParts[dataFileNameParts.length-1];
+
+                    if (dataFileExtension.equals("json") && dataFile.canRead()) {
+                        House oldHouse = new House(house);
+                        if (house.loadHouseFromJsonFile(houseJsonFile.getAbsolutePath())) {
+                            MetaData newMetadata = MetaDataReader.fromFile(dataFile.getPath());
+                            if (newMetadata != null) {
+                                Measures newMeasures = MeasuresReader.fromFile(newMetadata, house.getRoomsNames());
+                                if (newMeasures != null) {
+                                    metaData = newMetadata;
+                                    measures = newMeasures;
+                                }
+                                else
+                                    showErrorMessageLoadingADataFile();
+
+                            }
+                            else
+                                showErrorMessageLoadingADataFile();
+
+                            this.changeImage(house.getImageDir());
+                            this.setMeasures(measures);
+                            this.setMetaData(metaData);
+                            this.setReadings(measures.getVisibleReadings());
+                        }
+                        else {
+                            this.setHouse(oldHouse);
+                            Alert houseFileFormatError = new Alert(Alert.AlertType.ERROR);
+                            houseFileFormatError.setTitle("Invalid house file format");
+                            houseFileFormatError.setHeaderText("There has been a problem loading the house.");
+                            houseFileFormatError.setContentText("Please, revise the file format to ensure that there\n" +
+                                    "are not mistakes in the file. ");
+                            houseFileFormatError.show();
+                        }
+                    }
+                    else
+                        showErrorMessageLoadingAJsonFile();
+                }
+            }
+            else
+                showErrorMessageLoadingAJsonFile();
+
+        }
     }
 
+    private void showErrorMessageLoadingAJsonFile() {
+        Alert error = new Alert(Alert.AlertType.ERROR);
+        error.setTitle("Error");
+        error.setHeaderText("Invalid file selected");
+        error.setContentText("The selected file is not a valid .json file.");
+        error.show();
+    }
+
+    private void showErrorMessageLoadingADataFile() {
+        Alert error = new Alert(Alert.AlertType.ERROR);
+        error.setTitle("Invalid data file format");
+        error.setHeaderText("There has been a problem loading the house data.");
+        error.setContentText("Please, revise the file format to ensure that there\n" +
+                "are not mistakes in the file. ");
+        error.show();
+    }
+
+    @FXML
+    private void handleHelpMenuAction(javafx.event.Event event) {
+        String helpText = "\n" +
+        "1) First of all, a valid house, or area data .json file must be loaded.\n" +
+                "That file contains the image used by the house and the polygons data,\n" +
+                "that represents the rooms of that house, where the measurements are made.\n\n" +
+                "2) Once the house file has been loaded correctly, is necessary to load the measures\n " +
+                "data file in order to generate the graphics of the measurements. This file must be .json. \n" +
+                "Once it has been loaded, the house map will appear in the left part of the window.\n\n" +
+                "3) The rooms are selected clicking it in the house image, and the level of intensity\n" +
+                "changing the slider value at the bottom of the window."+
+                "\n\n\n\n";
+
+        String house = "{\n" +
+                "\t\"id\": \"...\",\n" +
+                "\t\"title\": \"...\",\n" +
+                "\t\"raster\": {\n" +
+                "\t\t\"uri\": \"imageDir\"\n" +
+                "\t},\n" +
+                "\t\"geo\": {\n" +
+                "\t\t\"type\": \"FeatureCollection\",\n" +
+                "\t\t\"features\": [\n" +
+                "\t\t\t{\n" +
+                "\t\t\t\t\"type\": \"Feature\",\n" +
+                "\t\t\t\t\"properties\": {},\n" +
+                "\t\t\t\t\"id\": \"ROOM_NAME\",\n" +
+                "\t\t\t\t\"geometry\": {\n" +
+                "\t\t\t\t\t\"type\": \"Polygon\",\n" +
+                "\t\t\t\t\t\"coordinates\": [\n" +
+                "\t\t\t\t\t\t[\n" +
+                "\t\t\t\t\t\t\t[x1, y1], [x2, y2], ...\n" +
+                "\t\t\t\t\t\t]\n" +
+                "\t\t\t\t\t]\n" +
+                "\t\t\t\t}\n" +
+                "\t\t\t},\n" +
+                "\t\t\t.\n" +
+                "\t\t\t.\n" +
+                "\t\t\t.\n" +
+                "\t\t],\n" +
+                "\t\t\"crs\": {\n" +
+                "\t\t\t\"type\": \"name\",\n" +
+                "\t\t\t\"properties\": {\n" +
+                "\t\t\t\t\"name\": \"urn:ogc:def:crs:OGC:1.3:CRS84\"\n" +
+                "\t\t\t}\n" +
+                "\t    }\n" +
+                "\t}\n" +
+                "}";
+
+        String data = "{\n" +
+                "  \"trainingDataFile\": \"txtFileDir\",\n" +
+                "  \"validationDataFile\": \"txtFileDir\",\n" +
+                "  \"trainingSamples\":  ...,\n" +
+                "  \"validationSamples\": ...,\n" +
+                "  \"numberOfMacs\": ...,\n" +
+                "  \"numberOfMacsTraining\" :...,\n" +
+                "  \"numberOfMacsValidation\": ...,\n" +
+                "  \"rangeTraining\": {\n" +
+                "    \"min\": ...,\n" +
+                "    \"max\": ...\n" +
+                "  },\n" +
+                "  \"rangeValidation\": {\n" +
+                "    \"min\": ...,\n" +
+                "    \"max\": ...\n" +
+                "  },\n" +
+                "  \"WAPs\" : [\n" +
+                "    {\"name\": \"WAP00000\",\"macAddress\":\"dirMAC\"},\n" +
+                "\t.\n" +
+                "\t.\n" +
+                "\t.\n" +
+                "  ]\n" +
+                "}";
+
+        Stage helpWindow = new Stage();
+        helpWindow.initModality(Modality.WINDOW_MODAL);
+        helpWindow.setTitle("Instructions for using the program");
+        helpWindow.setMinWidth(500);
+        helpWindow.setMinHeight(300);
+        helpWindow.setResizable(true);
+
+        Stage houseSchemeWindow = new Stage();
+        houseSchemeWindow.initModality(Modality.WINDOW_MODAL);
+        houseSchemeWindow.setTitle("House .json file format");
+        houseSchemeWindow.setHeight(600);
+        houseSchemeWindow.setWidth(450);
+        houseSchemeWindow.setResizable(false);
+
+        Stage dataSchemeWindow = new Stage();
+        dataSchemeWindow.initModality(Modality.WINDOW_MODAL);
+        dataSchemeWindow.setTitle("House data .json file format");
+        dataSchemeWindow.setHeight(450);
+        dataSchemeWindow.setWidth(350);
+        dataSchemeWindow.setResizable(false);
+
+        Label helpWindowText = new Label(helpText);
+        helpWindowText.setFont(Font.font("Times New Roman", 16.0));
+
+        javafx.scene.control.TextArea houseScheme = new TextArea(house);
+        houseScheme.setEditable(false);
+        houseScheme.setMinSize(450, 600);
+
+        javafx.scene.control.TextArea dataScheme = new TextArea(data);
+        dataScheme.setEditable(false);
+        dataScheme.setMinSize(350, 450);
+
+        VBox houseSchemeWindowBox = new VBox();
+        houseSchemeWindowBox.getChildren().add(houseScheme);
+
+        VBox dataSchemeWindowBox = new VBox();
+        dataSchemeWindowBox.getChildren().add(dataScheme);
+
+        javafx.scene.control.Button showHouseScheme = new Button("Show house .json format");
+        javafx.scene.control.Button showDataScheme = new Button("Show data .json format");
+
+        VBox helpWindowBox = new VBox();
+        helpWindowBox.getChildren().addAll(helpWindowText, showHouseScheme, showDataScheme);
+        helpWindowBox.setAlignment(Pos.TOP_LEFT);
+
+        Scene helpWindowScene = new Scene(helpWindowBox);
+        helpWindow.setScene(helpWindowScene);
+
+        Scene houseSchemeScene = new Scene(houseSchemeWindowBox);
+        houseSchemeWindow.setScene(houseSchemeScene);
+
+        Scene dataSchemeScene = new Scene(dataSchemeWindowBox);
+        dataSchemeWindow.setScene(dataSchemeScene);
+
+        showHouseScheme.setOnAction(e -> houseSchemeWindow.show());
+        showDataScheme.setOnAction(e -> dataSchemeWindow.show());
+
+        helpWindow.show();
+    }
     /**
      * Setters
      */
@@ -240,8 +461,15 @@ public class Controller implements Initializable {
 
     private boolean changeImage(String uri) {
         //TODO revisar si falla
-        Image image = new Image(uri);
-        houseImage.setImage(image);
-        return true;
+        if (uri == null || uri.equals(""))
+            return false;
+
+        else {
+            Image image = new Image(uri);
+            houseImage.setImage(image);
+            return true;
+        }
     }
+
+
 }

@@ -21,7 +21,7 @@ public class MetaDataReader {
             String content = new String(Files.readAllBytes(Paths.get(fileName)));
             metaData = gson.fromJson(new FileReader(fileName), MetaData.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            return null;
         }
         return metaData;
     }

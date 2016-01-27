@@ -124,6 +124,19 @@
 						]
 					]
 				}
+			},
+			{
+				"type": "Feature",
+				"properties": {},
+				"id": "DRAWINGROOM",
+				"geometry": {
+					"type": "Polygon",
+					"coordinates": [
+						[
+
+						]
+					]
+				}
 			}
 		],
 		"crs": {

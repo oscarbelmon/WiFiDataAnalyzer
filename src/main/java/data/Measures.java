@@ -1,5 +1,6 @@
 package data;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,7 +12,8 @@ import java.util.stream.Collectors;
 public class Measures {
     private List<Measure> measures;
 
-    Measures(List<Measure> measures) {
+    public Measures() {this.measures = new LinkedList<>();}
+    public Measures(List<Measure> measures) {
         this.measures = measures;
     }
 

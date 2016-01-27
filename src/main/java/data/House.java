@@ -1,16 +1,12 @@
 package data;
 
 import com.google.gson.stream.JsonReader;
-import javafx.fxml.FXML;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
-import java.awt.Polygon;
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 
 /**
@@ -31,9 +27,21 @@ public class House {
     private HashMap<String, Polygon> house = new HashMap();
     private ArrayList<String> rooms = new ArrayList<>();
 
-    String imageUri;
+    String imageUri = "";
 
     public House() {}
+
+    public House(House house) {
+        String[] rooms = house.getRoomsNames();
+
+        for (String room : rooms) {
+            this.rooms.add(room);
+            Polygon asociated = house.getRoom(room);
+            this.house.put(room, asociated);
+        }
+
+        this.imageUri = house.getImageDir();
+    }
 
     /**
      * Guarda un polígono asociado a una habitación.
@@ -87,7 +95,9 @@ public class House {
      * @param room - Nombre de la habitación.
      * @return - Objeto Polygon asociado.
      */
-    public Polygon getRoom(String room) { return house.get(room); }
+    public Polygon getRoom(String room) {
+        return house.get(room);
+    }
 
 
     /**
@@ -101,15 +111,6 @@ public class House {
             roomsNames[i] = (String) aux[i];
         }
         return roomsNames;
-    }
-
-
-    /**
-     * Devuelve el número de habitaciones.
-     * @return - Número de habitaciones. (int)
-     */
-    public int numberOfRooms() {
-        return house.size();
     }
 
 
@@ -209,8 +210,7 @@ public class House {
             reader.close();
             return true;
         }
-        catch (IOException f) {
-            f.printStackTrace();
+        catch (Exception f) {
             return false;
         }
     }
