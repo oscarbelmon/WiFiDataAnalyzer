@@ -1,20 +1,21 @@
 {
-	"id": "h01",
-	"title": "CasaOscar",
-	"raster": "/gui/planoEscaladoColores.jpg",
-	"data": "./meta_data.json",
+	"id": "prueba",
+	"title": "prueba",
+	"raster": {
+		"uri": "/gui/plano.png"
+	},
 	"geo": {
 		"type": "FeatureCollection",
 		"features": [
 			{
 				"type": "Feature",
 				"properties": {},
-				"id": "KITCHEN",
+				"id": "ROOM1",
 				"geometry": {
 					"type": "Polygon",
 					"coordinates": [
 						[
-							[35, 40], [139, 40], [139, 138], [63, 138], [63, 109], [34, 109], [35,40]
+							
 						]
 					]
 				}
@@ -22,120 +23,128 @@
 			{
 				"type": "Feature",
 				"properties": {},
-				"id": "DININGROOM",
+				"id": "ROOM2",
 				"geometry": {
 					"type": "Polygon",
 					"coordinates": [
 						[
-							[142, 13], [270, 13], [270, 170], [142, 170], [142, 13]
+							[100, 100], [100, 200], [200, 200], [200, 100], [100, 100]
 						]
 					]
 				}
+			
 			},
 			{
 				"type": "Feature",
 				"properties": {},
-				"id": "BALCONY",
+				"id": "ROOM3",
 				"geometry": {
 					"type": "Polygon",
 					"coordinates": [
 						[
-							[33, 10], [34, 33], [97, 34], [97, 38], [115, 38], [115, 35], [135, 35], [135, 13], [105, 11], [105, 10], [33, 10]
+						
 						]
 					]
 				}
+			
 			},
 			{
 				"type": "Feature",
 				"properties": {},
-				"id": "BEDROOM1",
+				"id": "ROOM4",
 				"geometry": {
 					"type": "Polygon",
 					"coordinates": [
 						[
-							[70, 208], [71, 284], [156, 284], [157, 209], [70, 208]
+						
 						]
 					]
 				}
+			
 			},
 			{
 				"type": "Feature",
 				"properties": {},
-				"id": "BEDROOM2",
+				"id": "ROOM5",
 				"geometry": {
 					"type": "Polygon",
 					"coordinates": [
 						[
-							[161,285], [161,301], [117,300], [117,303],	[113,303], [113,374], [118,374], [118,378], [188,378], [188,287], [161,285]
+						
 						]
 					]
 				}
+			
 			},
 			{
 				"type": "Feature",
 				"properties": {},
-				"id": "BEDROOM3",
+				"id": "ROOM6",
 				"geometry": {
 					"type": "Polygon",
 					"coordinates": [
 						[
-							[189, 266], [189, 283], [192, 283], [192, 378], [266, 378], [266, 375], [270, 302], [250, 302], [250, 267], [189, 266]
+						
 						]
 					]
 				}
+			
 			},
 			{
 				"type": "Feature",
 				"properties": {},
-				"id": "CORRIDOR",
+				"id": "ROOM7",
 				"geometry": {
 					"type": "Polygon",
 					"coordinates": [
 						[
-							[71,141],[71,192],[160,192],[160,211],[158,211],[158,224],[161,224],[161,284],[188,284],[188,212],[189,212],[189,201],[187,200],
-							[187,175],[139,135],[139,166],[142,166],[141,145],[139,145],[138,142],[71,141]
+						
 						]
 					]
 				}
+			
 			},
 			{
 				"type": "Feature",
 				"properties": {},
-				"id": "WC1",
+				"id": "ROOM8",
 				"geometry": {
 					"type": "Polygon",
 					"coordinates": [
 						[
-							[191,175],[269,176],[270,217],[191,216],[191,175]
+						
 						]
 					]
 				}
+			
 			},
 			{
 				"type": "Feature",
 				"properties": {},
-				"id": "WC2",
+				"id": "ROOM9",
 				"geometry": {
 					"type": "Polygon",
 					"coordinates": [
 						[
-							[191, 263], [270, 264], [270, 219], [191, 219], [191, 263]
+						
 						]
 					]
 				}
+			
 			},
 			{
 				"type": "Feature",
 				"properties": {},
-				"id": "DRAWINGROOM",
+				"id": "ROOM10",
 				"geometry": {
 					"type": "Polygon",
 					"coordinates": [
 						[
-
+						
 						]
 					]
 				}
+			
 			}
 		],
 		"crs": {

@@ -1,9 +1,8 @@
 {
 	"id": "h01",
 	"title": "CasaOscar",
-	"raster": {
-		"uri": "/gui/planoEscaladoColores.jpg"
-	},
+	"raster": "/gui/planoEscaladoColores.jpg",
+	"data": "./meta_data.json",
 	"geo": {
 		"type": "FeatureCollection",
 		"features": [

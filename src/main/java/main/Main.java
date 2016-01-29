@@ -44,7 +44,9 @@ public class Main extends Application {
 
         // Crea la ventana propiamente dicha, pasando el Stream del fxml y dando el tamaño
         primaryStage.setScene(new Scene(root, 1000, 500));
-        primaryStage.setResizable(false);
+        primaryStage.setMinHeight(500);
+        primaryStage.setMinWidth(800);
+        primaryStage.setResizable(true);
 
         // Llama a métodos del controlador para pasar los datos y muestra la ventana
         controller.setReadings(measures.getVisibleReadings());

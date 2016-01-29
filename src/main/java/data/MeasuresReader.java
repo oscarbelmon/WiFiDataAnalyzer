@@ -14,11 +14,10 @@ import java.util.List;
  * Carga las mediciones desde un archivo.
  */
 public class MeasuresReader {
-    private String[] rooms;
 
     public static Measures fromFile(MetaData metaData, String[] rooms) {
         final String fileName = metaData.getTrainingDataFile();
-        List<Measure> measures = new ArrayList<>();
+        List<Measure> measures;
         try {
             String content = new String(Files.readAllBytes(Paths.get(fileName)));
             measures = parse(content, metaData, rooms);

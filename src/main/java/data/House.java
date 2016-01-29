@@ -28,6 +28,7 @@ public class House {
     private ArrayList<String> rooms = new ArrayList<>();
 
     String imageUri = "";
+    String dataFileUri = "";
 
     public House() {}
 
@@ -121,6 +122,15 @@ public class House {
         return new String(imageUri);
     }
 
+
+    /**
+     * Devuelve la dirección del fichero .json de datos asociado.
+     */
+    public String getDataFileDir() {
+        return new String(dataFileUri);
+    }
+
+
     /**
      * Carga todos los datos de la casa a partir de un fichero Json que sigue el formato GeoJson y un esquema correcto.
      * Si se ejcuta con éxito se tendrá una casa con habitaciones, polígonos e imagen asociada.
@@ -146,13 +156,14 @@ public class House {
             }
 
             reader.nextName();
-            reader.beginObject();
-            reader.nextName();
 
             // Extrae y añade la imagen de la casa
             imageUri = reader.nextString();
 
-            reader.endObject();
+            reader.nextName();
+
+            // Extrae y añade la dirección del fichero de datos
+            dataFileUri = reader.nextString();
 
             // Etiqueta geo -> Comienzo a crear los polígonos
             reader.nextName();

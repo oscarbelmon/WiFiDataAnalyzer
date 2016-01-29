@@ -67,6 +67,7 @@ public class Controller implements Initializable {
         mySlider.valueProperty().addListener((a, b, c) -> {
             updateChartWithIntensity(c.intValue());
         });
+
     }
 
 
@@ -78,7 +79,6 @@ public class Controller implements Initializable {
     private void updateChartWithIntensity(int intensity) {
         Readings readingsTotal;
         Readings readingsIntensity;
-        Readings readingsIntensityWAP;
 
         for(String roomString: seriesMap.keySet()) {
             // Obtiene el subconjunto de lecturas para las habitaciones seleccionadas
@@ -108,8 +108,10 @@ public class Controller implements Initializable {
     private void updateChart(String room) {
         if(seriesMap.containsKey(room) == false) {
             Readings readingsRoom = readings.getVisibleReadingByRoom(room);
-            if(seriesMap.containsKey("ALL")) setSeries(readingsRoom, room.toString());
-            else addSeries(readingsRoom, room.toString());
+            if(seriesMap.isEmpty())
+                setSeries(readingsRoom, room.toString());
+            else
+                addSeries(readingsRoom, room.toString());
         }
     }
 
@@ -140,7 +142,7 @@ public class Controller implements Initializable {
         String categoryName;
         Number categoryData;
         Number totalData;
-        int level = (int)mySlider.getValue();
+        int level = (int) mySlider.getValue();
         int percentage;
         // Por cada MAC
         for(int i = 0; i < metaData.getNumberOfMacs(); i++) {
@@ -165,7 +167,6 @@ public class Controller implements Initializable {
     private void setSeries(Readings readings, String label) {
         XYChart.Series series = seriesMaxIntensity2(readings, label);
         readingsChart.getData().setAll(series);
-        //seriesMap.remove("ALL");
         seriesMap.put(label, series);
     }
 
@@ -182,8 +183,9 @@ public class Controller implements Initializable {
         ObservableList<String> wapNames = FXCollections.observableArrayList(wapsArray);
         waps.setCategories(wapNames);
         waps.setTickLabelRotation(90);
-        //setSeries(readings, "ALL");
+        waps.setAutoRanging(true);
     }
+
 
     /**
      * Escuchadores
@@ -210,68 +212,70 @@ public class Controller implements Initializable {
      */
     @FXML
     private void handleLoadHouseMenuAction(javafx.event.Event event) {
+        //Abre el selector de ficheros
         chooser.setTitle("Select a house .json file");
         File houseJsonFile = chooser.showOpenDialog(new Stage());
 
+        //Para prevenir cierres de la ventana
         if (houseJsonFile != null) {
             String[] fileNameParts = houseJsonFile.getName().split("\\.");
             String fileExtension = fileNameParts[fileNameParts.length-1];
 
+            //Si el fichero tiene la extensión correcta y se puede acceder a él
             if (fileExtension.equals("json") && houseJsonFile.canRead()) {
-                Alert houseOK = new Alert(Alert.AlertType.INFORMATION);
-                houseOK.setTitle("House file loaded correctly");
-                houseOK.setHeaderText("The house has been loaded correctly.");
-                houseOK.setContentText("Now, it's necessary to load a training data .json file \n" +
-                        "in order to create the graph.");
-                houseOK.showAndWait();
+                House newHouse = new House();
 
-                chooser.setTitle("Select a measures data .json file");
-                File dataFile = chooser.showOpenDialog(new Stage());
-
-                if (dataFile != null) {
-                    String[] dataFileNameParts = dataFile.getName().split("\\.");
-                    String dataFileExtension = dataFileNameParts[dataFileNameParts.length-1];
-
-                    if (dataFileExtension.equals("json") && dataFile.canRead()) {
-                        House newHouse = new House();
-                        if (newHouse.loadHouseFromJsonFile(houseJsonFile.getAbsolutePath())) {
-                            MetaData newMetadata = MetaDataReader.fromFile(dataFile.getPath());
-                            if (newMetadata != null) {
-                                Measures newMeasures = MeasuresReader.fromFile(newMetadata, newHouse.getRoomsNames());
-                                if (newMeasures != null) {
-                                    this.setMetaData(newMetadata);
-                                    this.setMeasures(newMeasures);
-                                    this.setHouse(newHouse);
-                                    this.setReadings(measures.getVisibleReadings());
-                                }
-                                else
-                                    showErrorMessageLoadingADataFile();
-
-                            }
-                            else
-                                showErrorMessageLoadingADataFile();
-                            
-                        }
-                        else {
-                            Alert houseFileFormatError = new Alert(Alert.AlertType.ERROR);
-                            houseFileFormatError.setTitle("Invalid house file format");
-                            houseFileFormatError.setHeaderText("There has been a problem loading the house.");
-                            houseFileFormatError.setContentText("Please, revise the file format to ensure that there\n" +
-                                    "are not mistakes in the file. ");
-                            houseFileFormatError.show();
-                        }
+                //Carga el fichero .json
+                if (newHouse.loadHouseFromJsonFile(houseJsonFile.getAbsolutePath())) {
+                    //Dirección del fichero de datos
+                    String dataFile = newHouse.getDataFileDir();
+                    //TODO: Revisar el correcto funcionamiento
+                    if (!dataFile.equals("") && dataFile.charAt(0) == '.') {
+                        String applicationDir = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+                        dataFile = dataFile.substring(2, dataFile.length());
+                        dataFile = applicationDir + dataFile;
                     }
-                    else
-                        showErrorMessageLoadingAJsonFile();
+
+                    MetaData newMetadata = MetaDataReader.fromFile(dataFile);
+                    Measures newMeasures = MeasuresReader.fromFile(newMetadata, newHouse.getRoomsNames());
+
+                    Object[] roomsInChart = seriesMap.keySet().toArray();
+                    for (int i = 0; i < roomsInChart.length; i++) {
+                        this.removeSeries((String) roomsInChart[i]);
+                    }
+
+
+
+                    this.setHouse(newHouse);
+                    this.setMeasures(newMeasures);
+                    this.setMetaData(newMetadata);
+                    this.setReadings(newMeasures.getVisibleReadings());
+                    this.populateChart();
+
+                    Alert houseOK = new Alert(Alert.AlertType.INFORMATION);
+                    houseOK.setTitle("House file loaded correctly");
+                    houseOK.setHeaderText("The house has been loaded correctly.");
+
+                    houseOK.showAndWait();
+
                 }
+                else
+                    this.showErrorMessageLoadingTheHouse();
+
             }
             else
-                showErrorMessageLoadingAJsonFile();
+                this.showErrorMessageLoadingAFile();
 
         }
     }
 
-    private void showErrorMessageLoadingAJsonFile() {
+
+
+
+    /**
+     * Muestra un mensaje de error por la selección de un fichero con un formato distinto a .json.
+     */
+    private void showErrorMessageLoadingAFile() {
         Alert error = new Alert(Alert.AlertType.ERROR);
         error.setTitle("Error");
         error.setHeaderText("Invalid file selected");
@@ -279,7 +283,11 @@ public class Controller implements Initializable {
         error.show();
     }
 
-    private void showErrorMessageLoadingADataFile() {
+
+    /**
+     * Muestra un mensaje de error por el error de cargado de un fichero .json.
+     */
+    private void showErrorMessageLoadingTheHouse() {
         Alert error = new Alert(Alert.AlertType.ERROR);
         error.setTitle("Invalid data file format");
         error.setHeaderText("There has been a problem loading the house data.");
@@ -288,6 +296,11 @@ public class Controller implements Initializable {
         error.show();
     }
 
+
+    /**
+     * Gestiona la ventana de ayuda de la aplicación, y las subventanas asociadas, que muestran los esquemas.
+     * @param event
+     */
     @FXML
     private void handleHelpMenuAction(javafx.event.Event event) {
         String helpText = "\n" +
@@ -304,9 +317,8 @@ public class Controller implements Initializable {
         String house = "{\n" +
                 "\t\"id\": \"...\",\n" +
                 "\t\"title\": \"...\",\n" +
-                "\t\"raster\": {\n" +
-                "\t\t\"uri\": \"imageDir\"\n" +
-                "\t},\n" +
+                "\t\"raster\": \"imageDir\"\n" +
+                "\t\"data\": \"dataJsonFile\"\n" +
                 "\t\"geo\": {\n" +
                 "\t\t\"type\": \"FeatureCollection\",\n" +
                 "\t\t\"features\": [\n" +
@@ -360,6 +372,7 @@ public class Controller implements Initializable {
                 "  ]\n" +
                 "}";
 
+        // Se crean todas las ventanas
         Stage helpWindow = new Stage();
         helpWindow.initModality(Modality.WINDOW_MODAL);
         helpWindow.setTitle("Instructions for using the program");
@@ -381,6 +394,7 @@ public class Controller implements Initializable {
         dataSchemeWindow.setWidth(350);
         dataSchemeWindow.setResizable(false);
 
+        // Se crean todos los cuadros de texto
         Label helpWindowText = new Label(helpText);
         helpWindowText.setFont(Font.font("Times New Roman", 16.0));
 
@@ -392,6 +406,7 @@ public class Controller implements Initializable {
         dataScheme.setEditable(false);
         dataScheme.setMinSize(350, 450);
 
+        // Se forman todas las ventanas, añadiendo los contenedores y el contenido
         VBox houseSchemeWindowBox = new VBox();
         houseSchemeWindowBox.getChildren().add(houseScheme);
 
@@ -405,6 +420,7 @@ public class Controller implements Initializable {
         helpWindowBox.getChildren().addAll(helpWindowText, showHouseScheme, showDataScheme);
         helpWindowBox.setAlignment(Pos.TOP_LEFT);
 
+        // Las termina de crear y muestra la principal
         Scene helpWindowScene = new Scene(helpWindowBox);
         helpWindow.setScene(helpWindowScene);
 
@@ -419,10 +435,11 @@ public class Controller implements Initializable {
 
         helpWindow.show();
     }
+
+
     /**
      * Setters
      */
-
     public void setReadings(Readings readings) {
         this.readings = readings;
     }
@@ -457,7 +474,6 @@ public class Controller implements Initializable {
     }
 
     private boolean changeImage(String uri) {
-        //TODO revisar si falla
         if (uri == null || uri.equals(""))
             return false;
 
