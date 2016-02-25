@@ -43,8 +43,8 @@ public class Main extends Application {
         String applicationDir = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
 
         //TODO: Utilizar variables de entorno para el testing
-        //String pathToFXML = "src/main/resources/gui/sample.fxml";
-        String pathToFXML = "appData/gui/sample.fxml";
+        String pathToFXML = "src/main/resources/gui/sample.fxml";
+        //String pathToFXML = "appData/gui/sample.fxml";
         URL fxmlURL = new File(pathToFXML).toURI().toURL();
         loader.setLocation(fxmlURL);
 

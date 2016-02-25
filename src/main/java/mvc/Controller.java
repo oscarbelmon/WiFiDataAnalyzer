@@ -5,7 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -17,6 +17,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
@@ -319,13 +320,12 @@ public class Controller implements Initializable {
     @FXML
     private void handleHelpMenuAction(javafx.event.Event event) {
         String helpText = "\n" +
-        "1) First of all, a valid house, or area data .json file must be loaded.\n" +
-                "That file contains the image used by the house and the polygons data,\n" +
-                "that represents the rooms of that house, where the measurements are made, \n" +
-                "and the direction of the .json data file, that contains the measurements." +
-                "\n2) The rooms are selected clicking it in the house image, and the level of intensity\n" +
-                "changing the slider value at the bottom of the window."+
-                "\n\n\n\n";
+        "1) Load a valid house/area .json file.\n" +
+                "The direction of the .json metadata file and the image must be inside the house.json file." +
+                "\nAll the directions inside the 2 files (house/area and metadata) must be correct,\n" +
+                "and it can be absolute or relative paths." +
+                "\n\n2) The rooms are selected clicking it in the house image, and the level of intensity\n" +
+                "changing the slider value at the bottom of the window.";
 
         String house = "{\n" +
                 "\t\"id\": \"...\",\n" +
@@ -385,7 +385,6 @@ public class Controller implements Initializable {
                 "  ]\n" +
                 "}";
 
-        // Se crean todas las ventanas
         Stage helpWindow = new Stage();
         helpWindow.initModality(Modality.WINDOW_MODAL);
         helpWindow.setTitle("Instructions for using the program");
@@ -402,7 +401,7 @@ public class Controller implements Initializable {
 
         Stage dataSchemeWindow = new Stage();
         dataSchemeWindow.initModality(Modality.WINDOW_MODAL);
-        dataSchemeWindow.setTitle("House data .json file format");
+        dataSchemeWindow.setTitle("House metadata .json file format");
         dataSchemeWindow.setHeight(450);
         dataSchemeWindow.setWidth(350);
         dataSchemeWindow.setResizable(false);
@@ -429,9 +428,14 @@ public class Controller implements Initializable {
         javafx.scene.control.Button showHouseScheme = new Button("Show house .json format");
         javafx.scene.control.Button showDataScheme = new Button("Show data .json format");
 
-        VBox helpWindowBox = new VBox();
-        helpWindowBox.getChildren().addAll(helpWindowText, showHouseScheme, showDataScheme);
-        helpWindowBox.setAlignment(Pos.TOP_LEFT);
+        BorderPane helpWindowBox = new BorderPane();
+        helpWindowBox.setPadding(new Insets(10, 10, 10, 10));
+        helpWindowBox.setTop(helpWindowText);
+        BorderPane subBox = new BorderPane();
+        subBox.setPadding(new Insets(10, 10, 10, 10));
+        subBox.setLeft(showHouseScheme);
+        subBox.setRight(showDataScheme);
+        helpWindowBox.setBottom(subBox);
 
         // Las termina de crear y muestra la principal
         Scene helpWindowScene = new Scene(helpWindowBox);

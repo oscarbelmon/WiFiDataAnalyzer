@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="WiFiDataAnalyzer.jar" size="8531176" download="eager" />
+    <jar href="WiFiDataAnalyzer.jar" size="8531277" download="eager" />
     <jar href="appData/lib/gson-2.3.jar" size="206853" download="eager" />
     <jar href="appData/lib/hamcrest-core-1.3.jar" size="45024" download="eager" />
     <jar href="appData/lib/junit-4.11.jar" size="245039" download="eager" />
