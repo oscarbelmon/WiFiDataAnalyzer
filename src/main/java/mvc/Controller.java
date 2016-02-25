@@ -70,13 +70,13 @@ public class Controller implements Initializable {
         mySlider.valueProperty().addListener((a, b, c) -> {
             updateChartWithIntensity(c.intValue());
         });
-
     }
 
 
     /**
      * Actualiza el gráfico con la intensidad que se le pasa.
      * Usado por el slider. Escuchador slider -> updateChartWithIntensity(Parámetro)
+     *
      * @param intensity - Parámetro de intensidad.
      */
     private void updateChartWithIntensity(int intensity) {
@@ -106,6 +106,7 @@ public class Controller implements Initializable {
 
     /**
      * Actualiza el gráfico añadiendo la habitación que se pasa como parámetro.
+     *
      * @param room - Nombre de la habitación.
      */
     private void updateChart(String room) {
@@ -121,6 +122,7 @@ public class Controller implements Initializable {
 
     /**
      * Elimina la habitación del gráfico.
+     *
      * @param room - Habitación a eliminar.
      */
     private void removeSeries(String room) {
@@ -132,14 +134,15 @@ public class Controller implements Initializable {
 
 
     /**
-     * Crea y devuelve el gráfico. Lo inicializa con "ALL" y todos los valores a su máxima intensidad (100%).
+     * Crea y devuelve el gráfico.
      * También le pone el nombre.
      *
      * @param readingsRoom - Lecturas de todas las habitaciones.
      * @param label - Nombre del gráfico.
      * @return - Gráfico.
      */
-    private XYChart.Series<String, Number> seriesMaxIntensity2(Readings readingsRoom, String label) {
+    //TODO: Considerar implementación multithread.
+    private XYChart.Series<String, Number> initializeSeries(Readings readingsRoom, String label) {
         XYChart.Series<String, Number> serie = new XYChart.Series<>();
         serie.setName(label);
         String categoryName;
@@ -161,14 +164,14 @@ public class Controller implements Initializable {
 
 
     private void addSeries(Readings readings, String label) {
-        XYChart.Series series = seriesMaxIntensity2(readings, label);
+        XYChart.Series series = initializeSeries(readings, label);
         readingsChart.getData().addAll(series);
         seriesMap.put(label, series);
     }
 
 
     private void setSeries(Readings readings, String label) {
-        XYChart.Series series = seriesMaxIntensity2(readings, label);
+        XYChart.Series series = initializeSeries(readings, label);
         readingsChart.getData().setAll(series);
         seriesMap.put(label, series);
     }
@@ -176,7 +179,7 @@ public class Controller implements Initializable {
 
     /**
      * Coloca las WAPs en el gráfico, en la parte inferior.
-     * No varían durante el transcurso de la aplicación.
+     * Si se carga otra casa cambiarán, y si no se selecciona ninguna habitación no se mostrarán.
      */
     private void populateChart() {
         String[] wapsArray = new String[metaData.getNumberOfMacs()];
@@ -191,7 +194,15 @@ public class Controller implements Initializable {
 
 
     /**
-     * Escuchadores
+     * ============================
+     * === Métodos ESCUCHADORES ===
+     * ============================
+     */
+
+    /**
+     * Devuelve la posición del ratón al clicar detro de la imagen.
+     *
+     * @param event - Evento de clic dentro de la imagen.
      */
     @FXML
     private void handleImageClicked(MouseEvent event) {
@@ -209,9 +220,10 @@ public class Controller implements Initializable {
 
 
     /**
-     * Carga una casa a partir de dos ficheros .json, uno que define la imagen y los polígonos de la casa
-     * y otro que aporta los datos con todas las mediciones.
-     * @param event
+     * Carga una casa a partir del fichero que se va a seleccionar, que ha de seguir el formato
+     * del fichero "house.json" de la ayuda.
+     *
+     * @param event - Selección de la opción "Load a new house" dentro de "House options".
      */
     @FXML
     private void handleLoadHouseMenuAction(javafx.event.Event event) {
@@ -235,48 +247,50 @@ public class Controller implements Initializable {
      * A partir de un objeto File con la dirección del fichero de la casa.
      * 1) Carga el fichero de metadatos a partir de una ruta que puede ser relativa o absoluta.
      * 2) Manda actualizar la interfaz.
+     *
      * @param houseJsonFile - Fichero .json de la casa, introducido como una objeto File.
      * @return - Estado final de la carga.
      */
-    //TODO: Refactor urgently needed
     public boolean load(File houseJsonFile) {
-        boolean correctlyLoaded = false;
+        boolean correctlyLoadedFile = false;
+        String extensionOfFileToLoad = this.getFileExtension(houseJsonFile.getName());
+        House newHouse;
+        MetaData newMetadata;
+        Measures newMeasures;
 
-        String[] houseFileNameParts = houseJsonFile.getName().split("\\.");
-        String fileExtension = houseFileNameParts[houseFileNameParts.length-1];
+        if (extensionOfFileToLoad.equals("json") && houseJsonFile.canRead()) {
+            newHouse = new House();
 
-        if (fileExtension.equals("json") && houseJsonFile.canRead()) {
-            House newHouse = new House();
-            //Carga los datos de la casa del fichero .json, incluye la imagen de la interfaz
             if (newHouse.loadHouseFromJsonFile(houseJsonFile.getAbsolutePath())) {
-                //Dirección del fichero de datos (también .json)
-                String dataFileDir = newHouse.getDataFileDir();
+                String metadataFileDirection = newHouse.getDataFileDir();
 
-                if (!dataFileDir.equals("")) {
-                    String[] dataFileNameParts = dataFileDir.split("\\.");
-                    fileExtension = dataFileNameParts[dataFileNameParts.length-1];
+                if (!metadataFileDirection.equals("")) {
+                    extensionOfFileToLoad = this.getFileExtension(metadataFileDirection);
 
-                    if (fileExtension.equals("json")) {
-                        Path dataPath = Paths.get(houseJsonFile.getParent());
-                        dataPath = dataPath.resolve(Paths.get(dataFileDir).normalize()).normalize();
-                        dataFileDir = dataPath.toString();
+                    if (extensionOfFileToLoad.equals("json")) {
+                        Path metaDataFilePath = Paths.get(houseJsonFile.getParent());
+                        metaDataFilePath = metaDataFilePath.resolve(Paths.get(metadataFileDirection).normalize()).normalize();
+                        String finalMetaDataFileDirection = metaDataFilePath.toString();
 
-                        MetaData newMetadata = MetaDataReader.fromFile(dataFileDir);
-                        newMetadata.setMetaDataFile(dataFileDir);
-                        Measures newMeasures = MeasuresReader.fromFile(newMetadata, newHouse.getRoomsNames());
+                        newMetadata = MetaDataReader.fromFile(finalMetaDataFileDirection);
 
-                        if (newMeasures != null) {
-                            Object[] roomsInChart = seriesMap.keySet().toArray();
-                            for (int i = 0; i < roomsInChart.length; i++)
-                                this.removeSeries((String) roomsInChart[i]);
+                        if (newMetadata != null) {
+                            newMetadata.setMetaDataFile(finalMetaDataFileDirection);
+                            newMeasures = MeasuresReader.fromFile(newMetadata, newHouse.getRoomsNames());
 
-                            this.setHouse(newHouse);
-                            this.setMeasures(newMeasures);
-                            this.setMetaData(newMetadata);
-                            this.setReadings(newMeasures.getVisibleReadings());
-                            this.populateChart();
+                            if (newMeasures != null) {
+                                Object[] roomsInChart = seriesMap.keySet().toArray();
+                                for (int i = 0; i < roomsInChart.length; i++)
+                                    this.removeSeries((String) roomsInChart[i]);
 
-                            correctlyLoaded = true;
+                                this.setHouse(newHouse);
+                                this.setMeasures(newMeasures);
+                                this.setMetaData(newMetadata);
+                                this.setReadings(newMeasures.getVisibleReadings());
+                                this.populateChart();
+
+                                correctlyLoadedFile = true;
+                            }
                         }
 
                     }
@@ -285,7 +299,7 @@ public class Controller implements Initializable {
             }
         }
 
-        return correctlyLoaded;
+        return correctlyLoadedFile;
     }
 
     /**
@@ -315,7 +329,8 @@ public class Controller implements Initializable {
 
     /**
      * Gestiona la ventana de ayuda de la aplicación, y las subventanas asociadas, que muestran los esquemas.
-     * @param event
+     *
+     * @param event - Selección de la opción de "Steps for use this program" dentro del menú de ayuda.
      */
     @FXML
     private void handleHelpMenuAction(javafx.event.Event event) {
@@ -455,7 +470,9 @@ public class Controller implements Initializable {
 
 
     /**
-     * Setters
+     * =======================
+     * === Métodos SETTERS ===
+     * =======================
      */
     public void setReadings(Readings readings) {
         this.readings = readings;
@@ -470,17 +487,48 @@ public class Controller implements Initializable {
         this.measures = measures;
     }
 
+    /**
+     * Cambia la casa actual por otra y cambia la imagen mostrada.
+     *
+     * @param house
+     */
     public void setHouse(House house) {
         if (house != null) {
             this.house = house;
             changeImage(house.getImageDir());
         }
-
     }
 
 
     /**
-     * Métodos auxiliares
+     * ==========================
+     * === Métodos AUXILIARES ===
+     * ==========================
+     */
+
+    /**
+     * Devuelve la extensión del nombre del fichero pasado como parámetro.
+     *
+     * @return - Extensión
+     */
+    private String getFileExtension(String fullFileName) {
+        String fileExtension = null;
+
+        String[] partsOfFileName = fullFileName.split("\\.");
+
+        if (partsOfFileName.length > 1)
+            fileExtension = partsOfFileName[partsOfFileName.length-1];
+
+        return fileExtension;
+    }
+
+    /**
+     * Devuelve el nombre de la habitación al clicar dentro de la imagen.
+     * Se devolverá aquel nombre asociado con la zona de la imagen.
+     *
+     * @param mouseX - Posición X del ratón.
+     * @param mouseY - Posición Y del ratón.
+     * @return - Nombre de la habitación.
      */
     private String getClickedPosition(double mouseX, double mouseY) {
         String[] locations = house.getRoomsNames();
@@ -493,12 +541,19 @@ public class Controller implements Initializable {
         return null;
     }
 
-    private boolean changeImage(String uri) {
-        if (uri == null || uri.equals(""))
+    /**
+     * Cambia la imagen mostrada en la ventana por la que se quiere cargar,
+     * si se carga correctamente.
+     *
+     * @param absoluteURI - Dirección absoluta a la imagen.
+     * @return - Si se ha cambiado la imagen correctamente o no.
+     */
+    private boolean changeImage(String absoluteURI) {
+        if (absoluteURI == null || absoluteURI.equals(""))
             return false;
 
         else {
-            String imageUri = "file:" + uri;
+            String imageUri = "file:" + absoluteURI;
             Image image = new Image(imageUri);
             houseImage.setImage(image);
             return true;

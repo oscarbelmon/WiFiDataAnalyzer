@@ -106,6 +106,7 @@ public class House {
 
     /**
      * Obtiene todos los nombres de las habitaciones.
+     *
      * @return - Array de Strings, siendo cada elemento una habitación.
      */
     public String[] getRoomsNames() {
@@ -120,6 +121,8 @@ public class House {
 
     /**
      * Devuelve la dirección de la imagen asociada a la casa.
+     *
+     * @return - String con la ruta absoluta a la imagen.
      */
     public String getImageDir() {
         if (imageUri != null)
@@ -131,9 +134,10 @@ public class House {
 
     /**
      * Devuelve la dirección del fichero .json de datos asociado.
+     *
+     * @return - String con la ruta absoluta al fichero.
      */
     public String getDataFileDir() {
-
         if (dataFileUri != null)
             return dataFileUri.toString();
         else
@@ -150,96 +154,99 @@ public class House {
      * @throws InvalidPropertiesFormatException - Si el formato del fichero Json no es correcto.
      * @throws IllegalArgumentException - Si el formato de los argumentos en el fichero Json no es correcto.
      * Ej: Número de puntos X distinto al número de puntos Y.
+     * @return - true o false, si se ha cargado bien el fichero o no.
      */
     public boolean loadHouseFromJsonFile(final String jsonFile) {
         //TODO Refactorizar
         try {
-            FileReader file = new FileReader(jsonFile);
-            JsonReader reader = new JsonReader(file);
-            File jsonfile = new File(jsonFile);
+            FileReader jsonFileReader = new FileReader(jsonFile);
+            JsonReader jsonReader = new JsonReader(jsonFileReader);
+            File jsonFileObject = new File(jsonFile);
 
             // Salto la primera parte del documento (id y title)
-            reader.beginObject();
+            jsonReader.beginObject();
 
             for(int i = 0; i < 2; i++) {
-                reader.nextName();
-                reader.nextString();
+                jsonReader.nextName();
+                jsonReader.nextString();
             }
 
-            reader.nextName();
+            jsonReader.nextName();
 
             // Extrae y añade la imagen de la casa
-            String imageDirString = reader.nextString();
-            Path imageDir = Paths.get(imageDirString).normalize();
+            String imageDirection = jsonReader.nextString();
+            Path imagePath = Paths.get(imageDirection).normalize();
 
-            imageDir = jsonfile.getParentFile().toPath().resolve(imageDir).normalize();
+            imagePath = jsonFileObject.getParentFile().toPath().resolve(imagePath).normalize();
 
-            reader.nextName();
+            jsonReader.nextName();
 
             // Extrae y añade la dirección del fichero de datos
-            String dataFileDirString = reader.nextString();
-            Path dataFileDir = Paths.get(dataFileDirString).normalize();
+            String dataFileDirection = jsonReader.nextString();
+            Path dataFilePath = Paths.get(dataFileDirection).normalize();
 
-            dataFileDir = jsonfile.getParentFile().toPath().resolve(dataFileDir).normalize();
+            dataFilePath = jsonFileObject.getParentFile().toPath().resolve(dataFilePath).normalize();
 
             // Etiqueta geo -> Comienzo a crear los polígonos
-            reader.nextName();
-            reader.beginObject();
+            jsonReader.nextName();
+            jsonReader.beginObject();
 
-            reader.nextName();
-            reader.nextString();
-            reader.nextName();
+            jsonReader.nextName();
+            jsonReader.nextString();
+            jsonReader.nextName();
 
             // Array features (featureCollection)
             // Cada iteración del siguiente bucle -> Lee e introduce una habitación y le asocia su polígono
-            reader.beginArray();
+            jsonReader.beginArray();
 
-            while (reader.hasNext()) {
-                reader.beginObject();
-                reader.nextName();
-                reader.nextString();
-                reader.nextName();
-                reader.beginObject();
-                reader.endObject();
-                reader.nextName();
+            while (jsonReader.hasNext()) {
+                jsonReader.beginObject();
+                jsonReader.nextName();
+                jsonReader.nextString();
+                jsonReader.nextName();
+                jsonReader.beginObject();
+                jsonReader.endObject();
+                jsonReader.nextName();
                 // Habitación
-                String room = reader.nextString();
+                String room = jsonReader.nextString();
                 this.addNewRoom(room);
 
                 // Objeto geometry -> Puntos del polígono
-                reader.nextName();
-                reader.beginObject();
-                reader.nextName();
-                reader.nextString();
-                reader.nextName();
+                jsonReader.nextName();
+                jsonReader.beginObject();
+                jsonReader.nextName();
+                jsonReader.nextString();
+                jsonReader.nextName();
                 // Coordenadas del objeto
-                reader.beginArray();
-                reader.beginArray();
+                jsonReader.beginArray();
+                jsonReader.beginArray();
 
                 Polygon associated = new Polygon();
 
-                while (reader.hasNext()) {
-                    reader.beginArray();
-                    int x = reader.nextInt();
-                    int y = reader.nextInt();
+                while (jsonReader.hasNext()) {
+                    jsonReader.beginArray();
+                    int x = jsonReader.nextInt();
+                    int y = jsonReader.nextInt();
                     associated.addPoint(x, y);
-                    reader.endArray();
+                    jsonReader.endArray();
                 }
 
                 this.addRoomPolygon(room, associated);
 
-                reader.endArray();
-                reader.endArray();
-                reader.endObject();
-                reader.endObject();
+                jsonReader.endArray();
+                jsonReader.endArray();
+                jsonReader.endObject();
+                jsonReader.endObject();
             }
 
             // Termino de leer los polígonos y no me interesa más información -> Cierro
-            imageUri = imageDir;
-            dataFileUri = dataFileDir;
-            reader.close();
+            // Como no ha habido ningún error actualizo los datos.
+            imageUri = imagePath;
+            dataFileUri = dataFilePath;
+            jsonReader.close();
             return true;
         }
+        // La carga ha fallado, da igual el motivo -> Uso de Exception
         catch (Exception f) {
             return false;
         }
