@@ -1,9 +1,8 @@
 {
 	"id": "prueba",
 	"title": "prueba",
-	"raster": {
-		"uri": "/gui/plano.png"
-	},
+	"raster": "./gui/plano.png",
+	"data": "./meta_data.json",
 	"geo": {
 		"type": "FeatureCollection",
 		"features": [

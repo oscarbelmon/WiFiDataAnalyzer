@@ -1,0 +1,26 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" build-on-make="true" name="WiFiDataAnalyzer1">
+    <output-path>$PROJECT_DIR$/classes/artifacts/WiFiDataAnalyzer1</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="main.Main" />
+        <option name="convertCss2Bin" value="true" />
+        <option name="description" value="" />
+        <option name="htmlParamFile" value="" />
+        <option name="paramFile" value="" />
+        <option name="title" value="WiFiDA" />
+        <option name="vendor" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="WiFiDataAnalyzer.jar">
+        <element id="module-output" name="WiFiDataAnalyzer" />
+      </element>
+      <element id="directory" name="lib">
+        <element id="library" level="project" name="gson-2.3" />
+        <element id="library" level="project" name="hamcrest-core-1.3" />
+        <element id="library" level="project" name="junit-4.11" />
+      </element>
+    </root>
+  </artifact>
+</component>

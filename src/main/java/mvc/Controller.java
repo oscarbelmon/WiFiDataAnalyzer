@@ -26,6 +26,8 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -218,59 +220,72 @@ public class Controller implements Initializable {
 
         //Para prevenir cierres de la ventana
         if (houseJsonFile != null) {
-            String[] fileNameParts = houseJsonFile.getName().split("\\.");
-            String fileExtension = fileNameParts[fileNameParts.length-1];
 
-            //Si el fichero tiene la extensión correcta y se puede acceder a él
-            if (fileExtension.equals("json") && houseJsonFile.canRead()) {
-                House newHouse = new House();
-
-                //Carga el fichero .json
-                if (newHouse.loadHouseFromJsonFile(houseJsonFile.getAbsolutePath())) {
-                    //Dirección del fichero de datos
-                    String dataFile = newHouse.getDataFileDir();
-                    //TODO: Revisar el correcto funcionamiento
-                    if (!dataFile.equals("") && dataFile.charAt(0) == '.') {
-                        String applicationDir = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-                        dataFile = dataFile.substring(2, dataFile.length());
-                        dataFile = applicationDir + dataFile;
-                    }
-
-                    MetaData newMetadata = MetaDataReader.fromFile(dataFile);
-                    Measures newMeasures = MeasuresReader.fromFile(newMetadata, newHouse.getRoomsNames());
-
-                    Object[] roomsInChart = seriesMap.keySet().toArray();
-                    for (int i = 0; i < roomsInChart.length; i++) {
-                        this.removeSeries((String) roomsInChart[i]);
-                    }
-
-
-
-                    this.setHouse(newHouse);
-                    this.setMeasures(newMeasures);
-                    this.setMetaData(newMetadata);
-                    this.setReadings(newMeasures.getVisibleReadings());
-                    this.populateChart();
-
-                    Alert houseOK = new Alert(Alert.AlertType.INFORMATION);
-                    houseOK.setTitle("House file loaded correctly");
-                    houseOK.setHeaderText("The house has been loaded correctly.");
-
-                    houseOK.showAndWait();
-
-                }
-                else
-                    this.showErrorMessageLoadingTheHouse();
-
-            }
-            else
-                this.showErrorMessageLoadingAFile();
-
+            if (!this.load(houseJsonFile))
+                this.showErrorMessageLoadingTheHouse();
         }
+
+        else
+            this.showErrorMessageLoadingAFile();
+
     }
 
+    /**
+     * A partir de un objeto File con la dirección del fichero de la casa.
+     * 1) Carga el fichero de metadatos a partir de una ruta que puede ser relativa o absoluta.
+     * 2) Manda actualizar la interfaz.
+     * @param houseJsonFile - Fichero .json de la casa, introducido como una objeto File.
+     * @return - Estado final de la carga.
+     */
+    //TODO: Refactor urgently needed
+    public boolean load(File houseJsonFile) {
+        boolean correctlyLoaded = false;
 
+        String[] houseFileNameParts = houseJsonFile.getName().split("\\.");
+        String fileExtension = houseFileNameParts[houseFileNameParts.length-1];
 
+        if (fileExtension.equals("json") && houseJsonFile.canRead()) {
+            House newHouse = new House();
+            //Carga los datos de la casa del fichero .json, incluye la imagen de la interfaz
+            if (newHouse.loadHouseFromJsonFile(houseJsonFile.getAbsolutePath())) {
+                //Dirección del fichero de datos (también .json)
+                String dataFileDir = newHouse.getDataFileDir();
+
+                if (!dataFileDir.equals("")) {
+                    String[] dataFileNameParts = dataFileDir.split("\\.");
+                    fileExtension = dataFileNameParts[dataFileNameParts.length-1];
+
+                    if (fileExtension.equals("json")) {
+                        Path dataPath = Paths.get(houseJsonFile.getParent());
+                        dataPath = dataPath.resolve(Paths.get(dataFileDir).normalize()).normalize();
+                        dataFileDir = dataPath.toString();
+
+                        MetaData newMetadata = MetaDataReader.fromFile(dataFileDir);
+                        newMetadata.setMetaDataFile(dataFileDir);
+                        Measures newMeasures = MeasuresReader.fromFile(newMetadata, newHouse.getRoomsNames());
+
+                        if (newMeasures != null) {
+                            Object[] roomsInChart = seriesMap.keySet().toArray();
+                            for (int i = 0; i < roomsInChart.length; i++)
+                                this.removeSeries((String) roomsInChart[i]);
+
+                            this.setHouse(newHouse);
+                            this.setMeasures(newMeasures);
+                            this.setMetaData(newMetadata);
+                            this.setReadings(newMeasures.getVisibleReadings());
+                            this.populateChart();
+
+                            correctlyLoaded = true;
+                        }
+
+                    }
+                }
+
+            }
+        }
+
+        return correctlyLoaded;
+    }
 
     /**
      * Muestra un mensaje de error por la selección de un fichero con un formato distinto a .json.
@@ -306,11 +321,9 @@ public class Controller implements Initializable {
         String helpText = "\n" +
         "1) First of all, a valid house, or area data .json file must be loaded.\n" +
                 "That file contains the image used by the house and the polygons data,\n" +
-                "that represents the rooms of that house, where the measurements are made.\n\n" +
-                "2) Once the house file has been loaded correctly, is necessary to load the measures\n " +
-                "data file in order to generate the graphics of the measurements. This file must be .json. \n" +
-                "Once it has been loaded, the house map will appear in the left part of the window.\n\n" +
-                "3) The rooms are selected clicking it in the house image, and the level of intensity\n" +
+                "that represents the rooms of that house, where the measurements are made, \n" +
+                "and the direction of the .json data file, that contains the measurements." +
+                "\n2) The rooms are selected clicking it in the house image, and the level of intensity\n" +
                 "changing the slider value at the bottom of the window."+
                 "\n\n\n\n";
 
@@ -454,8 +467,11 @@ public class Controller implements Initializable {
     }
 
     public void setHouse(House house) {
-        this.house = house;
-        changeImage(house.getImageDir());
+        if (house != null) {
+            this.house = house;
+            changeImage(house.getImageDir());
+        }
+
     }
 
 
@@ -478,7 +494,8 @@ public class Controller implements Initializable {
             return false;
 
         else {
-            Image image = new Image(uri);
+            String imageUri = "file:" + uri;
+            Image image = new Image(imageUri);
             houseImage.setImage(image);
             return true;
         }

@@ -1,7 +1,7 @@
 {
 	"id": "h01",
 	"title": "CasaOscar",
-	"raster": "/gui/planoEscaladoColores.jpg",
+	"raster": "./gui/planoEscaladoColores.jpg",
 	"data": "./meta_data.json",
 	"geo": {
 		"type": "FeatureCollection",

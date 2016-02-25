@@ -1,5 +1,7 @@
 package data;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -10,6 +12,7 @@ import java.util.List;
 public class MetaData {
     private String trainingDataFile;
     private String validationDataFile;
+    private Path metaDataFile;
     private int trainingSamples;
     private int validationSamples;
     private int numberOfMacs;
@@ -49,5 +52,14 @@ public class MetaData {
                 ", rangeValidation=" + rangeValidation +
                 ", WAPs=" + WAPs +
                 '}';
+    }
+
+    //TODO: Métodos de utilidad
+    public void setMetaDataFile(String direction) {
+        this.metaDataFile = Paths.get(direction);
+    }
+
+    public String getMetaDataFile() {
+        return metaDataFile.toString();
     }
 }

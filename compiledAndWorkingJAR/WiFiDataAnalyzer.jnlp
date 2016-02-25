@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="WiFiDataAnalyzer.jnlp">
+  <information>
+    <title>WiFiDA</title>
+    <vendor>Unknown</vendor>
+    <description>WiFiDataAnalyzer1</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="WiFiDataAnalyzer.jar" size="8531176" download="eager" />
+    <jar href="appData/lib/gson-2.3.jar" size="206853" download="eager" />
+    <jar href="appData/lib/hamcrest-core-1.3.jar" size="45024" download="eager" />
+    <jar href="appData/lib/junit-4.11.jar" size="245039" download="eager" />
+    <jar href="lib/gson-2.3.jar" size="206853" download="eager" />
+    <jar href="lib/hamcrest-core-1.3.jar" size="45024" download="eager" />
+    <jar href="lib/junit-4.11.jar" size="245039" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="600" height="400" main-class="main.Main"  name="WiFiDataAnalyzer1" />
+  <update check="background"/>
+</jnlp>

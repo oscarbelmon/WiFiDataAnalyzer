@@ -1,6 +1,8 @@
 package data;
 
+import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,8 +18,17 @@ import java.util.List;
 public class MeasuresReader {
 
     public static Measures fromFile(MetaData metaData, String[] rooms) {
-        final String fileName = metaData.getTrainingDataFile();
+        String fileName = metaData.getTrainingDataFile();
         List<Measure> measures;
+
+        //Ruta relativa
+        if (fileName.charAt(0) == '.') {
+            File actualFile = new File(metaData.getMetaDataFile());
+            Path actualPosition = Paths.get(actualFile.getAbsolutePath()).getParent();
+
+            fileName = actualPosition.resolve(Paths.get(fileName)).normalize().toString();
+        }
+
         try {
             String content = new String(Files.readAllBytes(Paths.get(fileName)));
             measures = parse(content, metaData, rooms);

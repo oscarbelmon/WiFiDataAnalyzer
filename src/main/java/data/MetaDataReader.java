@@ -12,9 +12,10 @@ import java.nio.file.Paths;
  *
  * Carga los datos de un fichero y devuelve un objeto MetaData.
  */
+
 public class MetaDataReader {
     public static MetaData fromFile(String fileName) {
-        MetaData metaData = new MetaData();
+        MetaData metaData;
         Gson gson = new Gson();
 
         try {

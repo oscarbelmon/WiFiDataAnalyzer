@@ -1,12 +1,18 @@
 package main;
 
-import data.*;
+import data.House;
+import data.Measures;
+import data.MetaData;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import mvc.Controller;
+
+import java.io.File;
+import java.net.URL;
 
 
 public class Main extends Application {
@@ -17,11 +23,13 @@ public class Main extends Application {
 
     private static House house;
 
+    private static String[] arguments;
+
     public static void main(String[] args) {
         house = new House();
         metaData = new MetaData();
         measures = new Measures();
-
+        arguments = args;
         launch(args);
     }
 
@@ -32,9 +40,15 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         // Carga la jerarquía del objeto desde un fxml
         FXMLLoader loader = new FXMLLoader();
+        String applicationDir = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
 
-        // Obtiene el objeto de tipo Parent mediante un Stream y con métodos de FXMLLoader
-        Parent root = loader.load(getClass().getResource("../gui/sample.fxml").openStream());
+        //TODO: Utilizar variables de entorno para el testing
+        //String pathToFXML = "src/main/resources/gui/sample.fxml";
+        String pathToFXML = "appData/gui/sample.fxml";
+        URL fxmlURL = new File(pathToFXML).toURI().toURL();
+        loader.setLocation(fxmlURL);
+
+        Parent root = loader.load();
 
         // Obtiene el objeto controlador de la interfaz gráfica (método de FXMLLoader)
         Controller controller = loader.getController();
@@ -53,6 +67,20 @@ public class Main extends Application {
         controller.setMetaData(metaData);
         controller.setMeasures(measures);
         controller.setHouse(house);
+
+        if (arguments != null && arguments.length == 1) {
+            String fileDir = arguments[0];
+            //String applicationDir = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+
+            File houseDir = new File(fileDir);
+            if (houseDir.exists() && houseDir.isFile() && houseDir.canRead())
+                controller.load(houseDir);
+            else {
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setTitle("Error loading the file");
+                error.setContentText("There has been an error loading the file passed as an argument.");
+            }
+        }
 
         primaryStage.show();
     }

@@ -1,0 +1,156 @@
+{
+	"id": "prueba",
+	"title": "prueba",
+	"raster": "./imageSource/plano.png",
+	"data": "./meta_data.json",
+	"geo": {
+		"type": "FeatureCollection",
+		"features": [
+			{
+				"type": "Feature",
+				"properties": {},
+				"id": "ROOM1",
+				"geometry": {
+					"type": "Polygon",
+					"coordinates": [
+						[
+							
+						]
+					]
+				}
+			},
+			{
+				"type": "Feature",
+				"properties": {},
+				"id": "ROOM2",
+				"geometry": {
+					"type": "Polygon",
+					"coordinates": [
+						[
+							[100, 100], [100, 200], [200, 200], [200, 100], [100, 100]
+						]
+					]
+				}
+			
+			},
+			{
+				"type": "Feature",
+				"properties": {},
+				"id": "ROOM3",
+				"geometry": {
+					"type": "Polygon",
+					"coordinates": [
+						[
+						
+						]
+					]
+				}
+			
+			},
+			{
+				"type": "Feature",
+				"properties": {},
+				"id": "ROOM4",
+				"geometry": {
+					"type": "Polygon",
+					"coordinates": [
+						[
+						
+						]
+					]
+				}
+			
+			},
+			{
+				"type": "Feature",
+				"properties": {},
+				"id": "ROOM5",
+				"geometry": {
+					"type": "Polygon",
+					"coordinates": [
+						[
+						
+						]
+					]
+				}
+			
+			},
+			{
+				"type": "Feature",
+				"properties": {},
+				"id": "ROOM6",
+				"geometry": {
+					"type": "Polygon",
+					"coordinates": [
+						[
+						
+						]
+					]
+				}
+			
+			},
+			{
+				"type": "Feature",
+				"properties": {},
+				"id": "ROOM7",
+				"geometry": {
+					"type": "Polygon",
+					"coordinates": [
+						[
+						
+						]
+					]
+				}
+			
+			},
+			{
+				"type": "Feature",
+				"properties": {},
+				"id": "ROOM8",
+				"geometry": {
+					"type": "Polygon",
+					"coordinates": [
+						[
+						
+						]
+					]
+				}
+			
+			},
+			{
+				"type": "Feature",
+				"properties": {},
+				"id": "ROOM9",
+				"geometry": {
+					"type": "Polygon",
+					"coordinates": [
+						[
+						
+						]
+					]
+				}
+			
+			},
+			{
+				"type": "Feature",
+				"properties": {},
+				"id": "ROOM10",
+				"geometry": {
+					"type": "Polygon",
+					"coordinates": [
+						[
+						
+						]
+					]
+				}
+			
+			}
+		],
+		"crs": {
+			"type": "name",
+			"properties": {
+				"name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+			}
+	    }
+	}
+}

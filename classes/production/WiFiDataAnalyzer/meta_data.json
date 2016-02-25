@@ -1,6 +1,6 @@
 {
-  "trainingDataFile": "src/main/resources/sensorstrainingData_belmonte.txt",
-  "validationDataFile": "src/main/resources/sensorsvalidationData_belmonte.txt",
+  "trainingDataFile": "./sensorstrainingData_belmonte.txt",
+  "validationDataFile": "./sensorsvalidationData_belmonte.txt",
   "trainingSamples":  9414,
   "validationSamples": 5265,
   "numberOfMacs": 127,

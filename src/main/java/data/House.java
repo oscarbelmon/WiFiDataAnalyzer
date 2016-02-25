@@ -3,8 +3,11 @@ package data;
 import com.google.gson.stream.JsonReader;
 
 import java.awt.*;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
@@ -27,8 +30,8 @@ public class House {
     private HashMap<String, Polygon> house = new HashMap();
     private ArrayList<String> rooms = new ArrayList<>();
 
-    String imageUri = "";
-    String dataFileUri = "";
+    Path imageUri = Paths.get("");
+    Path dataFileUri = Paths.get("");
 
     public House() {}
 
@@ -41,7 +44,7 @@ public class House {
             this.house.put(room, asociated);
         }
 
-        this.imageUri = house.getImageDir();
+        this.imageUri = Paths.get(house.getImageDir()).normalize();
     }
 
     /**
@@ -119,7 +122,10 @@ public class House {
      * Devuelve la dirección de la imagen asociada a la casa.
      */
     public String getImageDir() {
-        return new String(imageUri);
+        if (imageUri != null)
+            return imageUri.toString();
+        else
+            return null;
     }
 
 
@@ -127,7 +133,11 @@ public class House {
      * Devuelve la dirección del fichero .json de datos asociado.
      */
     public String getDataFileDir() {
-        return new String(dataFileUri);
+
+        if (dataFileUri != null)
+            return dataFileUri.toString();
+        else
+            return null;
     }
 
 
@@ -146,6 +156,7 @@ public class House {
         try {
             FileReader file = new FileReader(jsonFile);
             JsonReader reader = new JsonReader(file);
+            File jsonfile = new File(jsonFile);
 
             // Salto la primera parte del documento (id y title)
             reader.beginObject();
@@ -158,12 +169,18 @@ public class House {
             reader.nextName();
 
             // Extrae y añade la imagen de la casa
-            imageUri = reader.nextString();
+            String imageDirString = reader.nextString();
+            Path imageDir = Paths.get(imageDirString).normalize();
+
+            imageDir = jsonfile.getParentFile().toPath().resolve(imageDir).normalize();
 
             reader.nextName();
 
             // Extrae y añade la dirección del fichero de datos
-            dataFileUri = reader.nextString();
+            String dataFileDirString = reader.nextString();
+            Path dataFileDir = Paths.get(dataFileDirString).normalize();
+
+            dataFileDir = jsonfile.getParentFile().toPath().resolve(dataFileDir).normalize();
 
             // Etiqueta geo -> Comienzo a crear los polígonos
             reader.nextName();
@@ -218,6 +235,8 @@ public class House {
             }
 
             // Termino de leer los polígonos y no me interesa más información -> Cierro
+            imageUri = imageDir;
+            dataFileUri = dataFileDir;
             reader.close();
             return true;
         }

@@ -10,11 +10,11 @@ import static org.junit.Assert.assertThat;
  * Created by oscar on 27/09/15.
  */
 
-/**
+
 public class MeasuresTest {
     private static MetaData metaData;
-    private static String metaDataFile = "src/main/resources/meta_data.json";
-//    private String dataFile = "src/test/resources/sensorstrainingData_belmonte.txt";
+    private static String metaDataFile = "/src/main/resources/meta_data.json";
+    private static String[] rooms = {"BALCONY", "KITCHEN", "WC1", "WC2", "BEDROOM1", "BEDROOM2", "BEDROOM3", "DININGROOM", "CORRIDOR"};
 
     @BeforeClass
     public static void init() {
@@ -23,14 +23,13 @@ public class MeasuresTest {
 
     @Test
     public void testGetNumberMeasures() throws Exception {
-        Measures measures = MeasuresReader.fromFile(metaData);
+        Measures measures = MeasuresReader.fromFile(metaData, rooms);
         assertThat(measures.getNumberMeasures(), is(9414));
     }
 
     @Test
     public void testGetMeasuresByRoom() throws Exception {
-        Measures measures = MeasuresReader.fromFile(metaData);
-        assertThat(measures.getMeasuresByRoom(Room.BALCONY).getNumberMeasures(), is(530));
+        Measures measures = MeasuresReader.fromFile(metaData, rooms);
+        assertThat(measures.getMeasuresByRoom("BALCONY").getNumberMeasures(), is(530));
     }
 }
- **/
