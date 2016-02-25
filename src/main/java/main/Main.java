@@ -13,6 +13,8 @@ import mvc.Controller;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 public class Main extends Application {
@@ -40,48 +42,71 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         // Carga la jerarquía del objeto desde un fxml
         FXMLLoader loader = new FXMLLoader();
+        String pathToFXML;
+
+        //TODO:Buscar método más elaborado
         String applicationDir = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+        String[] appDirExtension = applicationDir.split("\\.");
 
-        //TODO: Utilizar variables de entorno para el testing
-        //String pathToFXML = "src/main/resources/gui/sample.fxml";
-        String pathToFXML = "appData/gui/sample.fxml";
-        URL fxmlURL = new File(pathToFXML).toURI().toURL();
-        loader.setLocation(fxmlURL);
+        if (appDirExtension.length > 1 && appDirExtension[appDirExtension.length-1].equals("jar"))
+            pathToFXML = "appData/gui/sample.fxml";
+        else
+            pathToFXML = "src/main/resources/gui/sample.fxml";
 
-        Parent root = loader.load();
+        File fxmlFile = new File(pathToFXML);
+        if (fxmlFile.exists() && fxmlFile.canRead()) {
+            URL fxmlURL = fxmlFile.toURI().toURL();
+            loader.setLocation(fxmlURL);
 
-        // Obtiene el objeto controlador de la interfaz gráfica (método de FXMLLoader)
-        Controller controller = loader.getController();
+            Parent root = loader.load();
 
-        // Pone el título a la ventana
-        primaryStage.setTitle("WiFi Fingerprints");
+            // Obtiene el objeto controlador de la interfaz gráfica (método de FXMLLoader)
+            Controller controller = loader.getController();
 
-        // Crea la ventana propiamente dicha, pasando el Stream del fxml y dando el tamaño
-        primaryStage.setScene(new Scene(root, 1000, 500));
-        primaryStage.setMinHeight(500);
-        primaryStage.setMinWidth(800);
-        primaryStage.setResizable(true);
+            // Pone el título a la ventana
+            primaryStage.setTitle("WiFi Fingerprints");
 
-        // Llama a métodos del controlador para pasar los datos y muestra la ventana
-        controller.setReadings(measures.getVisibleReadings());
-        controller.setMetaData(metaData);
-        controller.setMeasures(measures);
-        controller.setHouse(house);
+            // Crea la ventana propiamente dicha, pasando el Stream del fxml y dando el tamaño
+            primaryStage.setScene(new Scene(root, 1000, 500));
+            primaryStage.setMinHeight(500);
+            primaryStage.setMinWidth(800);
+            primaryStage.setResizable(true);
 
-        if (arguments != null && arguments.length == 1) {
-            String fileDir = arguments[0];
-            //String applicationDir = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+            // Llama a métodos del controlador para pasar los datos y muestra la ventana
+            controller.setReadings(measures.getVisibleReadings());
+            controller.setMetaData(metaData);
+            controller.setMeasures(measures);
+            controller.setHouse(house);
 
-            File houseDir = new File(fileDir);
-            if (houseDir.exists() && houseDir.isFile() && houseDir.canRead())
-                controller.load(houseDir);
-            else {
-                Alert error = new Alert(Alert.AlertType.ERROR);
-                error.setTitle("Error loading the file");
-                error.setContentText("There has been an error loading the file passed as an argument.");
+            Alert error = null;
+
+            if (arguments != null && arguments.length > 0) {
+                String fileDirPassedAsAnArgument = arguments[0];
+
+                Path pathToFileArgument = Paths.get(applicationDir).normalize().getParent().resolve(Paths.get(fileDirPassedAsAnArgument).normalize());
+                boolean correctlyLoaded = false;
+
+                File houseDir = new File(pathToFileArgument.toString());
+                if (houseDir.exists() && houseDir.isFile() && houseDir.canRead())
+                    correctlyLoaded = controller.load(houseDir);
+
+                if (correctlyLoaded == false) {
+                    error = new Alert(Alert.AlertType.ERROR);
+                    error.setTitle("Error loading the file");
+                    error.setContentText("There has been an error loading the file passed\nas an argument.");
+                }
             }
-        }
 
-        primaryStage.show();
+            primaryStage.show();
+            if (error != null)
+                error.show();
+        }
+        else {
+            Alert errorLoadingFXML = new Alert(Alert.AlertType.ERROR);
+            errorLoadingFXML.setTitle("Error loading the FXML file");
+            errorLoadingFXML.setContentText("The sample.fxml file must be\ninside of the /gui folder\nand must have the name 'sample.fxml'");
+            errorLoadingFXML.showAndWait();
+            System.exit(-1);
+        }
     }
 }

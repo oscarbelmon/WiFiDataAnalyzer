@@ -7,10 +7,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c7674346-3083-45b1-b2fd-bfa4b768d636" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/artifacts/WiFiDataAnalyzer1/WiFiDataAnalyzer.jar" afterPath="$PROJECT_DIR$/classes/artifacts/WiFiDataAnalyzer1/WiFiDataAnalyzer.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/main/Main.class" afterPath="$PROJECT_DIR$/classes/production/WiFiDataAnalyzer/main/Main.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/compiledAndWorkingJAR/WiFiDataAnalyzer.jar" afterPath="$PROJECT_DIR$/compiledAndWorkingJAR/WiFiDataAnalyzer.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/data/House.java" afterPath="$PROJECT_DIR$/src/main/java/data/House.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/artifacts/WiFiDataAnalyzer1/WiFiDataAnalyzer.jnlp" afterPath="$PROJECT_DIR$/classes/artifacts/WiFiDataAnalyzer1/WiFiDataAnalyzer.jnlp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/compiledAndWorkingJAR/WiFiDataAnalyzer.jnlp" afterPath="$PROJECT_DIR$/compiledAndWorkingJAR/WiFiDataAnalyzer.jnlp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/main/Main.java" afterPath="$PROJECT_DIR$/src/main/java/main/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/mvc/Controller.java" afterPath="$PROJECT_DIR$/src/main/java/mvc/Controller.java" />
     </list>
     <ignored path="WiFiDataAnalizer.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -44,8 +47,8 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/main/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.82285714">
-              <caret line="46" column="8" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
+            <state vertical-scroll-proportion="4.1657143">
+              <caret line="95" column="109" selection-start-line="95" selection-start-column="109" selection-end-line="95" selection-end-column="109" />
               <folding />
             </state>
           </provider>
@@ -774,7 +777,7 @@
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="main.Main" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="/resources/ej2/prueba.json" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
@@ -870,7 +873,7 @@
       <workItem from="1455980283515" duration="3000" />
       <workItem from="1456152467568" duration="5140000" />
       <workItem from="1456229777427" duration="37000" />
-      <workItem from="1456399117933" duration="10173000" />
+      <workItem from="1456399117933" duration="13164000" />
     </task>
     <servers />
   </component>
@@ -907,7 +910,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="114030000" />
+    <option name="totallyTimeSpent" value="117021000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1346,8 +1349,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/main/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.82285714">
-          <caret line="46" column="8" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
+        <state vertical-scroll-proportion="4.1657143">
+          <caret line="95" column="109" selection-start-line="95" selection-start-column="109" selection-end-line="95" selection-end-column="109" />
           <folding />
         </state>
       </provider>
@@ -1418,6 +1421,7 @@
             <option name="proportions">
               <list>
                 <option value="0.3770115" />
+                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>
